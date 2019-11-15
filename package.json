@@ -1,0 +1,29 @@
+{
+  "name": "mountain-info",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "setup-db": "docker run -p 27017:27017 -d --restart unless-stopped --name mountain-info-db mongo",
+    "start-db": "docker start mountain-info-db"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/domengabrovsek/mountain-info.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/domengabrovsek/mountain-info/issues"
+  },
+  "homepage": "https://github.com/domengabrovsek/mountain-info#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3",
+    "express": "^4.17.1",
+    "mongodb": "^3.3.4",
+    "mongoose": "^5.7.11",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.5"
+  }
+}
