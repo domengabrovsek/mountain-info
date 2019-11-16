@@ -58,4 +58,21 @@ router.get('/scrape', async(req, res) => {
     }
 });
 
+// endpoint to get data for specific mountain, find mountain data via ID.
+router.get('/mountain/:id', async (req, res) => {
+    var id = req.params.id; //or use req.param('id')
+
+    try {
+        const mountain = await getById(id);
+
+        if(mountain) {
+            res.send(mountain);
+        } else {
+            res.status(400).send({ error: `Cannot get mountain data for ID ${id}!`});
+        }
+    } catch(error) {
+        res.status(400).send({ error: `Cannot get mountain data for ID ${id}!`})
+    }
+})
+
 module.exports = router;
