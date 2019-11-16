@@ -58,11 +58,12 @@ router.get('/scrape', async(req, res) => {
     }
 });
 
-// endpoint to get data for specific mountain, find mountain data via ID.
-router.get('/mountain/:id', async (req, res) => {
-    var id = req.params.id; //or use req.param('id')
+// endpoint to get data for specific mountain, find mountain data via ID. Method only allow numbers(int) as get parameter
+router.get('/mountain/:id(\\d+)/', async (req, res) => {
+    var id = req.params.id;
 
     try {
+
         const mountain = await getById(id);
 
         if(mountain) {
@@ -70,6 +71,8 @@ router.get('/mountain/:id', async (req, res) => {
         } else {
             res.status(400).send({ error: `Cannot get mountain data for ID ${id}!`});
         }
+
+        
     } catch(error) {
         res.status(400).send({ error: `Cannot get mountain data for ID ${id}!`})
     }
