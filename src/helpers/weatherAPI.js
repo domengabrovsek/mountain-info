@@ -9,7 +9,7 @@ const OPEN_WEATHER_MAP_URL = "http://api.openweathermap.org/data/2.5/weather?";
 const OPEN_DATA_SLO = "https://opendata.si/vreme/report/?";
 
 
-/* Open weather map */
+/* Open weather map API */
 const fetchOpenWeatherByLatLon = async (lat, lon) => {
     const data = await fetchJSON(`${OPEN_WEATHER_MAP_URL}lat=${lat}&lon=${lon}&&units=metric&APPID=${WEATHER_API_KEY}`, 'GET')
     .catch(err => {
@@ -26,7 +26,7 @@ const fetchOpenWeatherByName = async (name) => {
     return data;
 }
 
-/* OPEN data slo */
+/* OPEN weather data API - slo */
 const fetchOpenDataByLatLon = async (lat, lon) => {
     const data = await fetchJSON(`${OPEN_DATA_SLO}lat=${lat}&lon=${lon}`, 'GET')
     .catch(err => {

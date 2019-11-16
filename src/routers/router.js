@@ -94,6 +94,7 @@ router.get('/weather/lat=:lat&lon=:lon', [
     const lon = req.params.lon;
 
     try {
+        // weather API call
         const data = await fetchOpenDataByLatLon(lat,lon).catch(err => {
             res.send({message: `Error occured: ${err}`});
         });
@@ -110,6 +111,7 @@ router.get('/weather/lat=:lat&lon=:lon', [
     
 });
 
+// endpoint for fetching weather data by name
 router.get("/weather/name=:name", [
         check('name').not().isEmpty()
     ], async (req, res) => {
@@ -121,6 +123,7 @@ router.get("/weather/name=:name", [
     const name = req.params.name;
 
     try {
+        // weather API call
         const data = await fetchOpenWeatherByName(name).catch(err => {
             res.send({message: `Error occured: ${err}`})
         });
