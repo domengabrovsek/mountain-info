@@ -6,6 +6,8 @@ const rp = require('request-promise');
 const cheerio = require('cheerio');
 const { parse } = require('../helpers/parser');
 const { saveToDb, getById } = require('../db/db-helpers');
+const { fetchOpenDataByLatLon, fetchOpenWeatherByName } = require('../helpers/weatherAPI');
+const { check, validationResult } = require('express-validator');
 
 // test endpoint
 router.get('/test', async(req, res) => {
@@ -76,6 +78,62 @@ router.get('/mountain/:id(\\d+)/', async (req, res) => {
     } catch(error) {
         res.status(400).send({ error: `Cannot get mountain data for ID ${id}!`})
     }
-})
+});
+
+// endpoint for fetching weather data by coordinates (lat and lon)
+router.get('/weather/lat=:lat&lon=:lon', [
+    check('lat').isDecimal(),
+    check('lon').isDecimal()
+  ], async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() })
+    }
+
+    const lat = req.params.lat;
+    const lon = req.params.lon;
+
+    try {
+        const data = await fetchOpenDataByLatLon(lat,lon).catch(err => {
+            res.send({message: `Error occured: ${err}`});
+        });
+
+        if(data) {
+            res.send(data);
+        } else {
+            res.status(200).send({message: `Result is empty`});
+        }
+        
+    } catch(error) {
+        res.status(400).send({error: `Cannot get weather data for lat: ${lat} and lon: ${lon}`});
+    }
+    
+});
+
+router.get("/weather/name=:name", [
+        check('name').not().isEmpty()
+    ], async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() })
+    }
+
+    const name = req.params.name;
+
+    try {
+        const data = await fetchOpenWeatherByName(name).catch(err => {
+            res.send({message: `Error occured: ${err}`})
+        });
+
+        if(data) {
+            res.send(data);
+        } else {
+            res.status(200).send({message: `Result is empty`});
+        }
+        
+    } catch(error) {
+        res.status(400).send({error: `Cannot get weather data for lat: ${lat} and lon: ${lon}`});
+    }
+});
 
 module.exports = router;
