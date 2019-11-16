@@ -135,7 +135,7 @@ router.get("/weather/name=:name", [
         }
         
     } catch(error) {
-        res.status(400).send({error: `Cannot get weather data for lat: ${lat} and lon: ${lon}`});
+        res.status(400).send({error: `Cannot get weather data for name: ${name}`});
     }
 });
 
