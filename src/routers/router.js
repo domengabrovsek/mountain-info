@@ -5,9 +5,9 @@ const router = new express.Router();
 const rp = require('request-promise');
 const cheerio = require('cheerio');
 const { parse } = require('../helpers/parser');
-const { saveToDb, getById } = require('../db/db-helpers');
+const { saveToDb, getById, getAllMountains, getMountainsByAltitude, getMountainsByAltitudeRange } = require('../db/db-helpers');
 const { fetchOpenDataByLatLon, fetchOpenWeatherByName } = require('../helpers/weatherAPI');
-const { check, validationResult } = require('express-validator');
+const { check, validationResult, checkSchema } = require('express-validator');
 
 // test endpoint
 router.get('/test', async(req, res) => {
@@ -136,6 +136,77 @@ router.get("/weather/name=:name", [
         
     } catch(error) {
         res.status(400).send({error: `Cannot get weather data for name: ${name}`});
+    }
+});
+
+// endpoint returns all mountains
+router.get("/mountains", async (req, res) => {
+    try {
+        const data = await getAllMountains();
+
+        if(data) {
+            res.send(data);
+        } else {
+            res.status(200).send({message: 'No mountain data'});
+        }
+    } catch (error) {
+        res.status(400).send({error: `Cannot get mountains data`});
+    }
+});
+
+// endpoint returns all moutains which has altitude > input param
+router.get("/mountain/altitude=:altitude", [
+    check('altitude').isNumeric(),
+  ], async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() })
+    }
+
+    const altitude = req.params.altitude;
+
+    try {
+        const data = await getMountainsByAltitude(altitude);
+
+        if(data) {
+            res.send(data);
+        } else {
+            res.status(200).send({message: 'No mountains data'});
+        }
+    } catch (error) {
+        res.status(400).send({error: `Cannot get mountains data`});
+    }
+});
+
+// endpoint returns all moutains in specified range (mountain altitude > min && mountain altitude < max)
+router.get("/mountain/minAltitude=:min&maxAltitude=:max", [
+        check('min').isNumeric(),
+        check("max").isNumeric()      
+    ], async (req, res) => {
+
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() })
+    }
+
+    const min = req.params.min;
+    const max = req.params.max;
+
+    const range = {
+        min: min,
+        max: max
+    };
+
+    try {
+        const data = await getMountainsByAltitudeRange(range);
+
+        if(data) {
+            res.send(data);
+        } else {
+            res.status(200).send({message: 'No mountains data'});
+        }
+    } catch (error) {
+        res.status(400).send({error: `Cannot get mountains data`});
     }
 });
 

@@ -22,7 +22,6 @@ const saveToDb = async(object, i) => {
 const getById = async(id) => {
     try {
         const result = await Mountain.find({ id: id });
-
         return result[0];
 
     } catch (error) {
@@ -30,7 +29,42 @@ const getById = async(id) => {
     }
 }
 
+const getAllMountains = async() => {
+    try {
+        const result = await Mountain.find({});
+        return result;
+    } catch(error) {
+        console.log(`Error while fetching mountains data: ${error}`);
+    }
+}
+
+const getMountainsByAltitude = async(altitude) => {
+    try {
+        const result = await Mountain.find({altitude: { $gt: altitude} });
+        return result;
+    } catch(error) {
+        console.log(`Error while fetching mountains data: ${error}`);
+    }
+}
+
+const getMountainsByAltitudeRange = async(range) => {
+    try {
+        const result = await Mountain.find({ 
+            $and: [
+                {altitude: { $gt: range.min }}, 
+                {altitude: { $lt: range.max }}
+            ]
+        });
+        return result;
+    } catch(error) {
+        console.log(`Error while fetching mountains data: ${error}`);
+    }
+}
+
 module.exports = {
     saveToDb,
-    getById
+    getById,
+    getAllMountains,
+    getMountainsByAltitude,
+    getMountainsByAltitudeRange
 };
