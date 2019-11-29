@@ -3,6 +3,7 @@ let map;
 let baseLayers;
 let overlayLayers;
 let markacija;
+const markers = L.markerClusterGroup();
 
 const url = "http://localhost:3000/mountain/";
 
@@ -11,10 +12,10 @@ function onLoad(params) {
         iconUrl:  './markacija.png',
         iconSize: [32, 32],
         iconAnchor: [0, 0],
+        popupAnchor: [16, 16]
       });
     initMap();
-    // WIP
-    //displayAllData();
+    displayAllData();
 }
 
 function initMap(params) {
@@ -23,7 +24,6 @@ function initMap(params) {
         layers: [defaultLayer]
     }).setView([46.1512, 14.9955], 9);
     L.control.layers(baseLayers, overlayLayers).addTo(map);
-    populateMap();
 }
 
 function initLayers(params) {
@@ -72,46 +72,53 @@ function initLayers(params) {
         "OMS Topo": OpenMapSurfer_Hillshade
     };
 
-    return Wikimedia;
+    return OpenMapSurfer_Roads;
 }
 
 function displayAllData(params) {
-    const markers = L.markerClusterGroup();
-
-    for (let id = 1; id < 3; id++) {
+    for (let id = 1; id <= 20; id++) {
         getMountain(id);
     }
     markers.addTo(map);
 }
 
 function getMountain(id) {
-    console.log("getMountain-"+id);
-    console.log(url+id);
-    /*getJSON*/
-    $.get(url+id, function(data) {
-        console.log("downloading from db");
-        console.log(data);
-    });
+    //console.log("getMountain-"+id);
+    //console.log(url+id);
+
+    loadJSON(url+id, addMarker);
 }
 
-function populateMap(params) {
-    const markers = L.markerClusterGroup();
-    markers.addLayer(L.marker([46.37823, 13.83648], {icon: markacija}).bindPopup("Triglav"));
-    markers.addLayer(L.marker([46.43277, 13.82114], {icon: markacija}).bindPopup("Škrlatica"));
-    markers.addLayer(L.marker([46.37683, 13.84315], {icon: markacija}).bindPopup("Mali Triglav"));
-    markers.addLayer(L.marker([46.43948, 13.65457], {icon: markacija}).bindPopup("Mangart"));
-    markers.addLayer(L.marker([46.43499, 13.82797], {icon: markacija}).bindPopup("Visoki Rokav"));
-    markers.addLayer(L.marker([46.42154, 13.68002], {icon: markacija}).bindPopup("Jalovec"));
-    markers.addLayer(L.marker([46.43968, 13.82998], {icon: markacija}).bindPopup("Veliki Oltar"));
-    markers.addLayer(L.marker([46.42579, 13.81385], {icon: markacija}).bindPopup("Dolkova špica"));
-    markers.addLayer(L.marker([46.41316, 13.79196], {icon: markacija}).bindPopup("Razor"));
-    markers.addLayer(L.marker([46.44179, 13.82419], {icon: markacija}).bindPopup("Velika Martuljška Ponca"));
-    markers.addLayer(L.marker([46.36018, 13.439], {icon: markacija}).bindPopup("Visoki Kanin"));
-    markers.addLayer(L.marker([46.35727, 13.43765], {icon: markacija}).bindPopup("Mali Kanin"));
-    markers.addLayer(L.marker([46.3602, 13.80966], {icon: markacija}).bindPopup("Kanjavec"));
-    markers.addLayer(L.marker([46.35718, 13.53548], {icon: markacija}).bindPopup("Grintovec"));
-    markers.addLayer(L.marker([46.3767, 13.82755], {icon: markacija}).bindPopup("Glava v Zaplanji"));
-    markers.addLayer(L.marker([46.42464, 13.76974], {icon: markacija}).bindPopup("Prisojnik"));
-    markers.addLayer(L.marker([46.42795, 13.81129], {icon: markacija}).bindPopup("Rogljica"));
-    markers.addTo(map);
+function addMarker(data) {
+    //db data
+    //console.log(data);
+    const coordinates = data.coordinates;
+    const name = data.name;
+    const mountainRange = data.mountainRange;
+    const altitude = data.altitude;
+    //fix for commas as decimal
+    let coordinatesArray = [];
+    coordinatesArray[0] = parseFloat(coordinates.N.replace(",", "."));
+    coordinatesArray[1] = parseFloat(coordinates.E.replace(",", "."));
+    //add marker to marker group
+    markers.addLayer(L.marker(coordinatesArray, {icon: markacija}).bindPopup(name +"<br>"+altitude+"m<br>"+mountainRange));    
+}
+
+function loadJSON(path, success, error)
+{
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function()
+    {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                if (success)
+                    success(JSON.parse(xhr.responseText));
+            } else {
+                if (error)
+                    console.log(xhr);
+            }
+        }
+    };
+    xhr.open("GET", path, true);
+    xhr.send();
 }

@@ -20,6 +20,7 @@
   "homepage": "https://github.com/domengabrovsek/mountain-info#readme",
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-validator": "^6.2.0",
     "mongodb": "^3.3.4",
