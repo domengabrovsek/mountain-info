@@ -4,8 +4,8 @@ const express = require('express');
 const router = new express.Router();
 const rp = require('request-promise');
 const cheerio = require('cheerio');
-const { parse } = require('../helpers/parser');
-const { saveToDb, getById, getAllMountains, getMountainsByAltitude, getMountainsByAltitudeRange } = require('../db/db-helpers');
+const { parse, parseRoutes } = require('../helpers/parser');
+const { saveToDb, saveRoutesToDB, getById, getAllMountains, getMountainsByAltitude, getMountainsByAltitudeRange } = require('../db/db-helpers');
 const { fetchOpenDataByLatLon, fetchOpenWeatherByName } = require('../helpers/weatherAPI');
 const { check, validationResult, checkSchema } = require('express-validator');
 
@@ -57,6 +57,46 @@ router.get('/scrape', async(req, res) => {
         res.send({ status: 'Success!' });
     } catch (error) {
         res.status(400).send({ error: `An error has occured!`});        
+    }
+});
+
+router.get("/scrapeRoutes", async (req, res) => {
+    console.log("Scrape routes");
+
+    try {
+        const mountains = await getAllMountains();
+
+        if(mountains) {
+            let counter = 0;
+            for(let mountain of mountains) {
+                const mountainRoutes = mountain.paths;
+
+                for(let i = 0; i < mountainRoutes.length; i++) {
+                    let pathUrl = mountainRoutes[i];
+
+                    try {
+
+                        const options = {
+                            uri: pathUrl,
+                            transform: function (body) { return cheerio.load(body); }
+                        };
+        
+                        await rp(options).then(async($) => {
+                            const data = parseRoutes($, counter);
+                            await saveRoutesToDB(data, counter);
+                            counter++;
+                        });
+                    }
+                    catch(error) {                   
+                        console.log(`Can't save route to DB ${error}`);   
+                    }
+                }
+            }
+        }
+
+        res.send({ status: 'Success!' });
+    } catch(error) {
+        res.send({error: `Can't get any mountain routes ${error}`});
     }
 });
 

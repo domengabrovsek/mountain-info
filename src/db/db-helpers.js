@@ -1,6 +1,7 @@
 'use strict';
 
 const Mountain = require('../models/mountain');
+const MountainRoutes = require('../models/mountainRoutes');
 
 const saveToDb = async(object, i) => {
     const result = new Mountain(object);
@@ -10,6 +11,24 @@ const saveToDb = async(object, i) => {
         await result.save();
         console.log(`${object.name} saved to database.\n`);
     } catch (error) {
+        // duplicate key in database
+        if(error.code === 11000) {
+            console.log(`Record with name ${object.name} already exists in database!`);
+        } else {
+            console.log(`Error: ${error} for object ${object.name}`);
+        }
+    }
+};
+
+const saveRoutesToDB = async(object, i) => {
+    const result = new MountainRoutes(object);
+
+    try {
+        console.log(`Saving ${object.name} (${i})`);
+
+        await result.save();
+        console.log(`${object.name} save to database.\n`);
+    } catch(error) {
         // duplicate key in database
         if(error.code === 11000) {
             console.log(`Record with name ${object.name} already exists in database!`);
@@ -66,5 +85,6 @@ module.exports = {
     getById,
     getAllMountains,
     getMountainsByAltitude,
-    getMountainsByAltitudeRange
+    getMountainsByAltitudeRange,
+    saveRoutesToDB
 };
