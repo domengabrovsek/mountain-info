@@ -5,9 +5,17 @@ const router = new express.Router();
 const rp = require('request-promise');
 const cheerio = require('cheerio');
 const { parse, parseRoutes } = require('../helpers/parser');
-const { saveToDb, saveRoutesToDB, getById, getAllMountains, getMountainsByAltitude, getMountainsByAltitudeRange } = require('../db/db-helpers');
+const { 
+    saveToDb, 
+    saveRoutesToDB, 
+    getById, 
+    getAllMountains, 
+    getMountainsByAltitude, 
+    getMountainsByAltitudeRange,
+    getRoutesByID,
+    getAllRoutes } = require('../db/db-helpers');
 const { fetchOpenDataByLatLon, fetchOpenWeatherByName } = require('../helpers/weatherAPI');
-const { check, validationResult, checkSchema } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 
 // test endpoint
 router.get('/test', async(req, res) => {
@@ -60,8 +68,8 @@ router.get('/scrape', async(req, res) => {
     }
 });
 
+/* get all currently available routes from stored mountains */
 router.get("/scrapeRoutes", async (req, res) => {
-    console.log("Scrape routes");
 
     try {
         const mountains = await getAllMountains();
@@ -70,6 +78,7 @@ router.get("/scrapeRoutes", async (req, res) => {
             let counter = 0;
             for(let mountain of mountains) {
                 const mountainRoutes = mountain.paths;
+                const mountainCoordinates = mountain.coordinates;
 
                 for(let i = 0; i < mountainRoutes.length; i++) {
                     let pathUrl = mountainRoutes[i];
@@ -83,6 +92,7 @@ router.get("/scrapeRoutes", async (req, res) => {
         
                         await rp(options).then(async($) => {
                             const data = parseRoutes($, counter);
+                            data.endCoordinates = mountainCoordinates;
                             await saveRoutesToDB(data, counter);
                             counter++;
                         });
@@ -94,14 +104,21 @@ router.get("/scrapeRoutes", async (req, res) => {
             }
         }
 
-        res.send({ status: 'Success!' });
+        res.send({ status: 'Success!', savedRoutes: counter });
     } catch(error) {
         res.send({error: `Can't get any mountain routes ${error}`});
     }
 });
 
 // endpoint to get data for specific mountain, find mountain data via ID. Method only allow numbers(int) as get parameter
-router.get('/mountain/:id(\\d+)/', async (req, res) => {
+router.get('/mountain/:id', [
+    check("id").isNumeric()
+], async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() })
+    }
+
     var id = req.params.id;
 
     try {
@@ -110,6 +127,33 @@ router.get('/mountain/:id(\\d+)/', async (req, res) => {
 
         if(mountain) {
             res.send(mountain);
+        } else {
+            res.status(400).send({ error: `Cannot get mountain data for ID ${id}!`});
+        }
+
+        
+    } catch(error) {
+        res.status(400).send({ error: `Cannot get mountain data for ID ${id}!`})
+    }
+});
+
+// endpoint to get data for specific mountain route, find route data via ID. Method only allow numbers(int) as get parameter
+router.get('/mountainRoute/:id', [
+    check("id").isNumeric()
+],async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() })
+    }
+
+    var id = req.params.id;
+
+    try {
+
+        const routes = await getRoutesByID(id);
+
+        if(routes) {
+            res.send(routes);
         } else {
             res.status(400).send({ error: `Cannot get mountain data for ID ${id}!`});
         }
@@ -191,6 +235,21 @@ router.get("/mountains", async (req, res) => {
         }
     } catch (error) {
         res.status(400).send({error: `Cannot get mountains data`});
+    }
+});
+
+// endpoint returns all routes
+router.get("/routes", async (req, res) => {
+    try {
+        const data = await getAllRoutes();
+
+        if(data) {
+            res.send(data);
+        } else {
+            res.status(200).send({message: 'No routes data'});
+        }
+    } catch (error) {
+        res.status(400).send({error: `Cannot get routes data`});
     }
 });
 

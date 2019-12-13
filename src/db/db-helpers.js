@@ -80,11 +80,31 @@ const getMountainsByAltitudeRange = async(range) => {
     }
 }
 
+const getRoutesByID = async(id) => {
+    try {
+        const result = await MountainRoutes.find({ id: id });
+        return result;
+    } catch(error) {
+        console.log(`Error while fetching routes data: ${error}`);
+    }
+}
+
+const getAllRoutes = async() => {
+    try {
+        const result = await MountainRoutes.find({});
+        return result;
+    } catch(error) {
+        console.log(`Error while fetching routes data: ${error}`);
+    }
+}
+
 module.exports = {
     saveToDb,
     getById,
     getAllMountains,
     getMountainsByAltitude,
     getMountainsByAltitudeRange,
-    saveRoutesToDB
+    saveRoutesToDB,
+    getRoutesByID,
+    getAllRoutes
 };
