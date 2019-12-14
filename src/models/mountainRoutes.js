@@ -34,6 +34,16 @@ const mountainRoutesScheme = new mongoose.Schema({
         type: String,
         trim: true
     },
+    endCoordinates: {
+        N: {
+            type: String,
+            trim: true
+        },
+        E: {
+            type: String,
+            trim: true
+        }
+    },
     difficultLevel: {
         type: String,
         trim: true

@@ -27,6 +27,12 @@
 
 - [GET] http://localhost:3000/scrape // run this to populate database with initial data - will later be replaced with prepopulated docker image
 
+- [GET] http://localhost:3000/scrapeRoutes // run this to populate database with initial route data
+
+- [GET] http://localhost:3000/mountainRoute/:id // run this to get route data. ID is route id.
+
+- [GET] http://localhost:3000/routes //run this to get all routes
+
 - [GET] http://localhost:3000/mountain/:id // run this to get mountain data. ID is mountain id
 
 - [GET] http://localhost:3000/mountains //run this to get all mountains
