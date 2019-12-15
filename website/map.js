@@ -9,7 +9,7 @@ const url = "http://localhost:3000/mountain/";
 
 function onLoad(params) {
     markacija = L.icon({
-        iconUrl:  './markacija.png',
+        iconUrl:  './img/markacija.png',
         iconSize: [32, 32],
         iconAnchor: [0, 0],
         popupAnchor: [16, 16]
