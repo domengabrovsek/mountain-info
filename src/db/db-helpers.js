@@ -48,6 +48,16 @@ const getById = async(id) => {
     }
 }
 
+const getMountainByName = async(name) => {
+    //https://stackoverflow.com/questions/26699885/how-can-i-use-a-regex-variable-in-a-query-for-mongodb
+    try {
+        const result = await Mountain.find({ name: {$regex: name, $options: 'i'}});
+        return result;
+    } catch(error) {
+        console.log(`Error: ${error} for name: ${name}`);
+    }
+}
+
 const getAllMountains = async() => {
     try {
         const result = await Mountain.find({});
@@ -106,5 +116,6 @@ module.exports = {
     getMountainsByAltitudeRange,
     saveRoutesToDB,
     getRoutesByID,
-    getAllRoutes
+    getAllRoutes,
+    getMountainByName
 };
