@@ -13,7 +13,8 @@ const {
     getMountainsByAltitude, 
     getMountainsByAltitudeRange,
     getRoutesByID,
-    getAllRoutes } = require('../db/db-helpers');
+    getAllRoutes,
+    getMountainByName } = require('../db/db-helpers');
 const { fetchOpenDataByLatLon, fetchOpenWeatherByName } = require('../helpers/weatherAPI');
 const { check, validationResult } = require('express-validator');
 
@@ -254,7 +255,7 @@ router.get("/routes", async (req, res) => {
 });
 
 // endpoint returns all moutains which has altitude > input param
-router.get("/mountain/altitude=:altitude", [
+router.get("/mountain/altitude/:altitude", [
     check('altitude').isNumeric(),
   ], async (req, res) => {
     const errors = validationResult(req)
@@ -278,7 +279,7 @@ router.get("/mountain/altitude=:altitude", [
 });
 
 // endpoint returns all moutains in specified range (mountain altitude > min && mountain altitude < max)
-router.get("/mountain/minAltitude=:min&maxAltitude=:max", [
+router.get("/mountain/min/:min/max/:max", [
         check('min').isNumeric(),
         check("max").isNumeric()      
     ], async (req, res) => {
@@ -306,6 +307,32 @@ router.get("/mountain/minAltitude=:min&maxAltitude=:max", [
         }
     } catch (error) {
         res.status(400).send({error: `Cannot get mountains data`});
+    }
+});
+
+// endpoint for fetching mountain data by its name
+router.get("/mountain/name/:name", [
+    check('name').not().isEmpty()
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() })
+    }
+
+    const name = req.params.name;
+
+    try {
+        // weather API call
+        const data = await getMountainByName(name);
+
+        if(data) {
+            res.send(data);
+        } else {
+            res.status(200).send({message: `Result is empty`});
+        }
+        
+    } catch(error) {
+        res.status(400).send({error: `Cannot get mountain data for name: ${name}`});
     }
 });
 

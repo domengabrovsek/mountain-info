@@ -37,10 +37,12 @@
 
 - [GET] http://localhost:3000/mountains //run this to get all mountains
 
-- [GET] http://localhost:3000/mountain/altitude=:altitude //run this to get mountain data where mountain altitude is bigger than input parameter
+- [GET] http://localhost:3000/mountain/altitude/:altitude //run this to get mountain data where mountain altitude is bigger than input parameter
 
-- [GET] http://localhost:3000/mountain/minAltitude=:min&maxAltitude=:max // run this to get montain data in altitude range
+- [GET] http://localhost:3000/mountain/min/:min/max/:max // run this to get montain data in altitude range
+
+- [GET] http://localhost:3000/mountain/name/:name //run this to get moutain data by name
 
 - [GET] http://localhost:3000/weather/lat=:lat&lon=:lon //run this to get weather data for specific location (lat, lon)
 
-- [GET] http://localhost:3000/weather/name=:name //run this to get weather data by city name
+- [GET] http://localhost:3000/weather/name/:name //run this to get weather data by city name
