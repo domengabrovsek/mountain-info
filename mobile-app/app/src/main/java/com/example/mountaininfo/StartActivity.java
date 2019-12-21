@@ -18,8 +18,11 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start);
 
         initViews();
-
         initHandler();
+    }
+
+    void initViews(){
+        logo = findViewById(R.id.logo);
     }
 
     void initHandler(){
@@ -36,10 +39,6 @@ public class StartActivity extends AppCompatActivity {
                 startMainActivity();
             }
         }, 2000);
-    }
-
-    void initViews(){
-        logo = findViewById(R.id.logo);
     }
 
     void startIconAnimation(){
