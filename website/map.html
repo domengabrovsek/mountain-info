@@ -4,16 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     <script type="text/javascript" src="./map.js"></script>
+    <link rel="stylesheet" href="style.css">
     <title>Mountains map</title>
 </head>
 <body onload="onLoad(this)">
-    <div id="mapid" style="position: absolute; top: 2; bottom: 2; width: 99vw; height: 95vh;"></div>
+    <!-- The sidebar -->
+    <div class="sidenav-btn" onclick="toggleNav()"><img src="./img/markacija.png"></img><i class="material-icons toggle-text">swap_horiz</i></div>
+    <span>
+        <div id="sidebar" class="sidenav">
+            <a href="home.html"><i class="material-icons">home</i> Home</a>
+            <a onclick="randomId()"><i class="material-icons">casino</i> Random mountain</a>
+            <a href="map.html"><i class="material-icons">map</i> Map</a>
+            <a href="#"><i class="material-icons">info_outline</i> About</a>
+        </div>
+        <div id="mapid" style="z-index: 0; height: 94vh; top: 3vh; width: 94vw; left: 3vw;"></div>
+    </span>
 </body>
 </html>
