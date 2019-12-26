@@ -122,3 +122,30 @@ function loadJSON(path, success, error)
     xhr.open("GET", path, true);
     xhr.send();
 }
+
+/* Set the width of the side navigation to 240px or 0px */
+function toggleNav() {
+    let sidebarWidth = document.getElementById("sidebar");
+    if (sidebarWidth.style.width == "" || sidebarWidth.style.width == "0px") {
+        $(sidebarWidth).animate(
+            { width: '+=240px' }, { duration: 200, queue: false }
+        );
+        $(document.getElementsByClassName("sidenav-btn")[0]).animate(
+            { left: '+=240px' }, { duration: 200, queue: false }
+        );
+        $(document.getElementById("mapid")).animate(
+            { left: '+=12.5vw', width: '-=12.5vw'}, { duration: 200, queue: false }
+        );
+    } else  {
+        //sidebarWidth.style.width = "";
+        $(sidebarWidth).animate(
+            { width: '-=240px' }, { duration: 200, queue: false }
+        );
+        $(document.getElementsByClassName("sidenav-btn")[0]).animate(
+            { left: '-=240px' }, { duration: 200, queue: false }
+        );
+        $(document.getElementById("mapid")).animate(
+            { left: '-=12.5vw', width: '+=12.5vw'}, { duration: 200, queue: false }
+        );
+    }  
+}

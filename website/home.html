@@ -11,6 +11,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
     <script src="./script.js"></script>
+    
     <title>Mountain info</title>
 </head>
 <body onload="init()">
@@ -99,6 +100,14 @@
             <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">×</button>
         </div>
         <div class="toast-body">Body</div>
+    </div>
+    <!-- The sidebar -->
+    <div class="sidenav-btn" onclick="toggleNav()"><img src="./img/markacija.png"></img><i class="material-icons toggle-text">swap_horiz</i></div>
+    <div id="sidebar" class="sidenav">
+        <a href="home.html"><i class="material-icons">home</i> Home</a>
+        <a onclick="randomId()"><i class="material-icons">casino</i> Random mountain</a>
+        <a href="map.html"><i class="material-icons">map</i> Map</a>
+        <a href="#"><i class="material-icons">info_outline</i> About</a>
     </div>
 </body>
 </html>

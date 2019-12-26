@@ -5,6 +5,7 @@ let searchButton;
 let searchInputAll;
 let options;
 let toggleAdvencedOptions;
+let sidenavButton;
 
 /* Default */
 const SEARCHBOX_HEIGHT = '44px';
@@ -26,6 +27,7 @@ function init(params) {
     searchInputAll = document.getElementById("search-input-all");
     options = document.getElementById("options");
     toggleAdvencedOptions = document.getElementById("more-opt");
+    sidenavButton = document.getElementsByClassName("sidenav-btn")[0];
 
     nameOpt = document.getElementById("name");
     heightOpt = document.getElementById("height");
@@ -128,6 +130,7 @@ function getData(params) {
         let minAltitude = 6000;
         let maxAltitude = 0;
 
+        /* find altitude numbers */
         searchPhrases.forEach(el => {
             if ($.isNumeric(el)) {
                 numbersCount -=- 1;
@@ -136,6 +139,7 @@ function getData(params) {
             }
         });
 
+        /* throws errors */
         if (minAltitude < 0) {
             errorToast("Error", "Minimum altitude allowed is 0");
             return;
@@ -151,12 +155,26 @@ function getData(params) {
         }
 
         if (numbersCount > 1) {
-            console.log("min: "+minAltitude+"m, max: "+maxAltitude+"m");
+            console.log("finding mounstains with min: "+minAltitude+"m, max: "+maxAltitude+"m");
+            window.location.href = 'http://localhost:3000/mountain/min/'+minAltitude+'/max/'+maxAltitude;
         } else if (numbersCount == 1) {
-            console.log("alt: "+minAltitude+"m");
+            console.log("finding mountains where alt >= "+minAltitude+"m");
+            window.location.href='http://localhost:3000/mountain/altitude/'+minAltitude;
         }
         console.log(searchPhrases);
+    } else {
+        selectedOptions.forEach(element => {
+            
+        });
     }
+
+    
+}
+
+function randomId() {
+    //TODO
+    window.location.href="#";
+    return true;
 }
 
 /* Show error/warning toast */
@@ -166,3 +184,25 @@ function errorToast(title, text) {
     $('.toast').toast({delay: 5000});
     $('.toast').toast('show');
 }
+
+/* Set the width of the side navigation to 240px or 0px */
+function toggleNav() {
+    let sidebarWidth = document.getElementById("sidebar");
+    if (sidebarWidth.style.width == "" || sidebarWidth.style.width == "0px") {
+        $(sidebarWidth).animate(
+            { width: '+=240px' }, { duration: 200, queue: false }
+        );
+        $(sidenavButton).animate(
+            { left: '+=240px' }, { duration: 200, queue: false }
+        );
+    } else  {
+        //sidebarWidth.style.width = "";
+        $(sidebarWidth).animate(
+            { width: '-=240px' }, { duration: 200, queue: false }
+        );
+        $(sidenavButton).animate(
+            { left: '-=240px' }, { duration: 200, queue: false }
+        );
+    }  
+}
+  
