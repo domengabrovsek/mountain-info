@@ -9,19 +9,26 @@ let sidenavButton;
 
 /* Default */
 const SEARCHBOX_HEIGHT = '44px';
+const URL_NAME = "http://localhost:3000/mountain/name/:name";
+const URL_MIN_MAX_HEIGHT = "http://localhost:3000/mountain/min/:min/max/:max";
+const URL_MIN_HEIGHT = "http://localhost:3000/mountain/altitude/:altitude";
+
+/* Search result */
+let result = new Map();
+let numberOfWaitingResults = 0;
 
 /* Advanced search options */
 let nameOpt;
 let heightOpt;
 let minHeightOpt;
 let maxHeightOpt;
-let rangeOpt;
-let countryOpt;
+//let rangeOpt;
+//let countryOpt;
 
-let selectedOptions = [];
+let selectedOptions = new Map();
 
 function init(params) {
-    console.log("init");
+    //console.log("init");
     searchBox = document.getElementById("search-div");
     searchButton = document.getElementById("search-button");
     searchInputAll = document.getElementById("search-input-all");
@@ -33,8 +40,9 @@ function init(params) {
     heightOpt = document.getElementById("height");
     minHeightOpt = document.getElementById("min-height");
     maxHeightOpt = document.getElementById("max-height");
-    rangeOpt = document.getElementById("mountain-range");
-    countryOpt = document.getElementById("country");
+    /* Not implemented */
+    //rangeOpt = document.getElementById("mountain-range");
+    //countryOpt = document.getElementById("country");
 
     searchButton.addEventListener("click", getData, true);
 
@@ -55,31 +63,31 @@ function init(params) {
 }
 
 function toggleOptions() {
-    console.log("toggle options");
+    //console.log("toggle options");
     $(options).slideToggle(400);
 }
 
 function clickOnOption(option) {
     let displayMode;
     /* Firstly check if you want to remove or add clicked option */
-    if (selectedOptions.includes(option.parentElement)) {
-        let index = selectedOptions.indexOf(option.parentElement);
-        /* Remove option from array */
-        selectedOptions.splice(index, 1);
+    if (selectedOptions.has(option.parentElement.id)) {
+        /* Remove option from map */
+        selectedOptions.delete(option.parentElement.id);
         /* Move option back to options-container */
+        $(option.parentElement.getElementsByTagName("input")).val('');
         options.appendChild(option.parentElement);
         displayMode = "none";
     } else {
         displayMode = "block";
         /* Add option to array */
-        selectedOptions.push(option.parentElement);
+        selectedOptions.set(option.parentElement.id, option.parentElement);
         /* Hide universal search input */
         searchInputAll.style.visibility = "hidden";
         /* Move option to search bar */
         searchBox.appendChild(option.parentElement);
     }
     /* If no options are selected shoe universal input */
-    if (selectedOptions.length == 0) {
+    if (selectedOptions.size == 0) {
         searchInputAll.style.visibility = "visible";
     }
 
@@ -108,7 +116,7 @@ function clickOnOption(option) {
     }
 
     /* Regulate search box height */
-    if (selectedOptions.length == 0) {
+    if (selectedOptions.size == 0) {
         searchInputAll.style.visibility = "visible";
         document.documentElement.style.setProperty('--searchbox-height', SEARCHBOX_HEIGHT);
     } else {
@@ -118,25 +126,35 @@ function clickOnOption(option) {
 }
 
 function checkSearchBoxSize(params) {
-    console.log($(searchBox).height());
+    //console.log($(searchBox).height());
     document.documentElement.style.setProperty('--searchbox-height', $(searchBox).height()+"px");
 }
 
 function getData(params) {
-    /* Check if no options are selected */
-    if (selectedOptions.length == 0) {
+    /* Check if no advanced options are selected */
+    if (selectedOptions.size == 0) {
         let searchPhrases = $(searchInputAll).val().trim().split(/\s+/);
         let numbersCount = 0;
         let minAltitude = 6000;
         let maxAltitude = 0;
 
+        let removedPhrases = [];
+
         /* find altitude numbers */
         searchPhrases.forEach(el => {
             if ($.isNumeric(el)) {
+                removedPhrases.push(el);
                 numbersCount -=- 1;
                 minAltitude > el ? minAltitude = el : "";
                 maxAltitude < el ? maxAltitude = el : "";
             }
+        });
+
+        /* remove numbers from searchPhrases */
+        removedPhrases.forEach(element => {
+            searchPhrases = jQuery.grep(searchPhrases, function(value) {
+                return value != element;
+            });
         });
 
         /* throws errors */
@@ -155,20 +173,101 @@ function getData(params) {
         }
 
         if (numbersCount > 1) {
-            console.log("finding mounstains with min: "+minAltitude+"m, max: "+maxAltitude+"m");
-            window.location.href = 'http://localhost:3000/mountain/min/'+minAltitude+'/max/'+maxAltitude;
+            //console.log("finding mounstains with min: "+minAltitude+"m, max: "+maxAltitude+"m");
+            loadJSON(URL_MIN_MAX_HEIGHT.replace(":min", minAltitude).replace(":max", maxAltitude), convertData);
         } else if (numbersCount == 1) {
-            console.log("finding mountains where alt >= "+minAltitude+"m");
-            window.location.href='http://localhost:3000/mountain/altitude/'+minAltitude;
+            //console.log("finding mountains where alt >= "+minAltitude+"m");
+            loadJSON(URL_MIN_HEIGHT.replace(":altitude", minAltitude), convertData);
         }
-        console.log(searchPhrases);
-    } else {
-        selectedOptions.forEach(element => {
-            
+        searchPhrases.forEach(phrase => {
+            //console.log("searching for name: " + phrase);
+            loadJSON(URL_NAME.replace(":name", phrase), convertData);
         });
-    }
+    } else {
+        let iterator = selectedOptions.entries();
+        let minAndMax = false;
+        let option = iterator.next();
+        while (!option.done) {
+            switch (option.value[0]) {
+                case "name":
+                    let phrase = $(option.value[1].getElementsByTagName("input")).val().trim();
+                    //console.log("searching for full name: "+ phrase);
+                    loadJSON(URL_NAME.replace(":name", phrase), convertData);
+                    break;
+                case "height":
+                    let height = $(option.value[1].getElementsByTagName("input")).val().trim();
+                    //console.log("searching for height +/- 25%: "+ height);
+                    loadJSON(URL_MIN_MAX_HEIGHT.replace(":min", height*0.75).replace(":max", height*1.25), convertData);
+                    break;
+                case "min-height":
+                    if (selectedOptions.has("max-height")) {
+                        minAndMax = true;
+                    } else {
+                        let minAltitude = $(option.value[1].getElementsByTagName("input")).val().trim();
+                        //console.log("finding mountains where alt >= "+minAltitude+"m");
+                        loadJSON(URL_MIN_HEIGHT.replace(":altitude", minAltitude), convertData);
+                    }
+                    break;
+                case "max-height":
+                    if (selectedOptions.has("min-height")) {
+                        minAndMax = true;
+                    } else {
+                        let maxAltitude = $(option.value[1].getElementsByTagName("input")).val().trim();
+                        //console.log("finding mountains where alt < "+maxAltitude+"m");
+                        loadJSON(URL_MIN_MAX_HEIGHT.replace(":max", maxAltitude).replace(":min", 0), convertData);
+                    }
+                    break;
+            }
+            option = iterator.next();
+        }
+        if (minAndMax) {
+            let minAltitude = $(selectedOptions.get("min-height").getElementsByTagName("input")).val().trim();
+            let maxAltitude = $(selectedOptions.get("max-height").getElementsByTagName("input")).val().trim();
+            loadJSON(URL_MIN_MAX_HEIGHT.replace(":min", minAltitude).replace(":max", maxAltitude), convertData);
+        }
+    }  
+}
 
-    
+function forwardToSite() {
+    console.log(result);
+
+    /*  all the mountains from search result 
+    *   are in map result
+    */
+
+    //tmp solution only for testing
+    result = new Map();
+}
+
+function convertData(data, callback) {
+    /* save all mountains from search to result map */
+    data.forEach(element => {
+        result.set(element.name, element);
+    });
+    numberOfWaitingResults--;
+    if (numberOfWaitingResults == 0) {
+        callback();
+    }
+}
+
+function loadJSON(path, success, error)
+{
+    numberOfWaitingResults++;
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function()
+    {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                if (success)
+                    success(JSON.parse(xhr.responseText), forwardToSite);
+            } else {
+                if (error)
+                    console.log(xhr);
+            }
+        }
+    };
+    xhr.open("GET", path, true);
+    xhr.send();
 }
 
 function randomId() {
