@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+    <script src="./details.js"></script>
+
+    <title>Mountain info</title>
+</head>
+
+<body onload="init()">
+    <div class="details">
+        <h2 id="heading" class="details-heading"></h2>
+        <div class="product-gallery">
+            <div class="product-image">
+                <img class="active" src="">
+            </div>
+            <ul class="image-list">
+                <li class="image-item"><img src="" style="border-radius: 0 0 0 10px;"></li>
+                <li class="image-item"><img src=""></li>
+                <li class="image-item"><img src=""style="border-radius: 0 0 10px 0;"></li>
+            </ul>
+        </div>
+        <div class="details-text-wrapper">
+            <p id="details-country"></p>
+            <p id="details-mountain-range"></p>
+            <p id="details-altitude"></p>
+            <p id="details-description"><b>Description:&nbsp&nbsp</b>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+                velit esse cillum dolore eu fugiat nulla pariatur.</p>
+        </div>
+
+        <div class="sidenav-btn" onclick="toggleNav()"><img src="./img/markacija.png"></img><i
+                class="material-icons toggle-text">swap_horiz</i></div>
+        <div id="sidebar" class="sidenav">
+            <a href="home.html"><i class="material-icons">home</i> Home</a>
+            <a onclick="randomId()"><i class="material-icons">casino</i> Random mountain</a>
+            <a href="map.html"><i class="material-icons">map</i> Map</a>
+            <a href="#"><i class="material-icons">info_outline</i> About</a>
+        </div>
+</body>
+
+</html>
