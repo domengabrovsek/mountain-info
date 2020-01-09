@@ -67,6 +67,15 @@ const getAllMountains = async() => {
     }
 }
 
+const deleteMountainRoutes = async() => {
+    try {
+        const result = await MountainRoutes.deleteMany({});
+        return result;
+    } catch(error) {
+        console.log(`Error while deleting mountain routes data: ${error}`);
+    }
+}
+
 const getMountainsByAltitude = async(altitude) => {
     try {
         const result = await Mountain.find({altitude: { $gt: altitude} });
@@ -108,6 +117,15 @@ const getAllRoutes = async() => {
     }
 }
 
+const getRoutesByMountainID = async(mountainID) => {
+    try {
+        const result = await MountainRoutes.find({"mountain.id": mountainID});
+        return result;
+    } catch(error) {
+        console.log(`Error while fetching routes data: ${error}`);
+    }
+}
+
 module.exports = {
     saveToDb,
     getById,
@@ -117,5 +135,7 @@ module.exports = {
     saveRoutesToDB,
     getRoutesByID,
     getAllRoutes,
-    getMountainByName
+    getMountainByName,
+    deleteMountainRoutes,
+    getRoutesByMountainID
 };

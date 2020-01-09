@@ -14,7 +14,9 @@ const {
     getMountainsByAltitudeRange,
     getRoutesByID,
     getAllRoutes,
-    getMountainByName } = require('../db/db-helpers');
+    getMountainByName,
+    deleteMountainRoutes,
+    getRoutesByMountainID } = require('../db/db-helpers');
 const { fetchOpenDataByLatLon, fetchOpenWeatherByName } = require('../helpers/weatherAPI');
 const { check, validationResult } = require('express-validator');
 
@@ -74,6 +76,7 @@ router.get("/scrapeRoutes", async (req, res) => {
 
     try {
         const mountains = await getAllMountains();
+        const deleteRoutes = await deleteMountainRoutes();
 
         if(mountains) {
             let counter = 0;
@@ -93,7 +96,7 @@ router.get("/scrapeRoutes", async (req, res) => {
         
                         await rp(options).then(async($) => {
                             const data = parseRoutes($, counter);
-                            data.endCoordinates = mountainCoordinates;
+                            data.mountain = mountain;
                             await saveRoutesToDB(data, counter);
                             counter++;
                         });
@@ -164,6 +167,34 @@ router.get('/mountainRoute/:id', [
         res.status(400).send({ error: `Cannot get mountain data for ID ${id}!`})
     }
 });
+
+// endpoint to find routes data via mountain ID. Method only allow numbers(int) as get parameter
+router.get('/mountainRoute/mountain/:mountainID', [
+    check("mountainID").isNumeric()
+],async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() })
+    }
+
+    var id = parseInt(req.params.mountainID);
+
+    try {
+
+        const routes = await getRoutesByMountainID(id);
+
+        if(routes) {
+            res.send(routes);
+        } else {
+            res.status(400).send({ error: `Cannot get mountain data for ID ${id}!`});
+        }
+
+        
+    } catch(error) {
+        res.status(400).send({ error: `Cannot get mountain data for ID ${id}!`})
+    }
+});
+
 
 // endpoint for fetching weather data by coordinates (lat and lon)
 router.get('/weather/lat=:lat&lon=:lon', [
