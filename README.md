@@ -29,7 +29,9 @@
 
 - [GET] http://localhost:3000/scrapeRoutes // run this to populate database with initial route data
 
-- [GET] http://localhost:3000/mountainRoute/:id // run this to get route data. ID is route id.
+- [GET] http://localhost:3000/mountainRoute/:id // run this to get specific route data. ID is route id.
+
+- [GET] http://localhost:3000/mountainRoute/mountain/:id //run this to get ALL routes for specific mountain. ID is mountain id.
 
 - [GET] http://localhost:3000/routes //run this to get all routes
 
