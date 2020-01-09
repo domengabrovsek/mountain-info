@@ -1,6 +1,13 @@
 package com.example.mountaininfo.API;
 
-public class ApiService {
+import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.http.GET;
+
+interface ApiService {
+
+    @GET("/routes")
+    Call<List<APIResults.Route>> getRoutes();
 
 }
