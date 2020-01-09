@@ -1,11 +1,15 @@
 
 let sidenavButton;
+let map;
+let markacija;
 
 function init(){
+    initMap();
     sidenavButton = document.getElementsByClassName("sidenav-btn")[0];
     
     //data from home page
     var data = JSON.parse(localStorage.getItem("details"));
+    setUpMap(data);
     console.log(data);
     setVaues(data);
 
@@ -82,4 +86,84 @@ function setVaues(data){
     mountainRange.innerHTML ="<b>Mountain range:&nbsp&nbsp</b>" + data.mountainRange;
     altitude.innerHTML = "<b>Altitude:&nbsp&nbsp</b>" + data.altitude + "m";
     heading.innerText = data.name; 
+}
+
+/* map */
+
+function initMap(params) {
+    const defaultLayer = initLayers();
+    map = L.map('map', {
+        layers: [defaultLayer]
+    }).setView([46.1512, 14.9955], 9);
+    L.control.layers(baseLayers, overlayLayers).addTo(map);
+    markacija = L.icon({
+        iconUrl:  './img/markacija.png',
+        iconSize: [24, 24],
+        iconAnchor: [0, 0],
+        popupAnchor: [12, 12]
+    });
+}
+
+function setUpMap(data) {
+    const element = data;
+    const coordinates = element.coordinates;
+    const name = element.name;
+    const mountainRange = element.mountainRange;
+    const altitude = element.altitude;
+    //fix for commas as decimal
+    let coordinatesArray = [];
+    coordinatesArray[0] = parseFloat(coordinates.N.replace(",", "."));
+    coordinatesArray[1] = parseFloat(coordinates.E.replace(",", "."));
+    //add marker to marker group
+    L.marker(coordinatesArray, {icon: markacija}).bindPopup(name +"<br>"+altitude+"m<br>"+mountainRange).addTo(map);
+    map.setView([coordinatesArray[0], coordinatesArray[1]], 10);
+}
+
+function initLayers(params) {
+    const OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        minZoom: 8,    
+        maxZoom: 19,
+	    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+
+    const Esri_WorldTopoMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+        minZoom: 8,
+        attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+    });
+
+    const OpenMapSurfer_Hillshade = L.tileLayer('https://maps.heigit.org/openmapsurfer/tiles/asterh/webmercator/{z}/{x}/{y}.png', {
+        minZoom: 8,
+        maxZoom: 18,
+	    attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> | Map data  <a href="https://lpdaac.usgs.gov/products/aster_policies">ASTER GDEM</a>, <a href="http://srtm.csi.cgiar.org/">SRTM</a>'
+    });
+
+    const OpenMapSurfer_Roads = L.tileLayer('https://maps.heigit.org/openmapsurfer/tiles/roads/webmercator/{z}/{x}/{y}.png', {
+        minZoom: 8,    
+        maxZoom: 19,
+	    attribution: 'Imagery from <a href="http://giscience.uni-hd.de/">GIScience Research Group @ University of Heidelberg</a> | Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+
+    const Wikimedia = L.tileLayer('https://maps.wikimedia.org/osm-intl/{z}/{x}/{y}.png', {
+	    attribution: '<a href="https://wikimediafoundation.org/wiki/Maps_Terms_of_Use">Wikimedia</a>',
+	    minZoom: 8,
+	    maxZoom: 19
+    });
+
+    const StamenTopo = L.tileLayer('http://{s}.tile.stamen.com/terrain/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    });
+
+    baseLayers = {
+        "OSM Roads": OpenStreetMap_Mapnik,
+        "ESRI Topo": Esri_WorldTopoMap,
+        "OMS Roads": OpenMapSurfer_Roads,
+        "Wikimedia": Wikimedia,
+        "Stamen Topo": StamenTopo
+    };
+
+    overlayLayers = {
+        "OMS Topo": OpenMapSurfer_Hillshade
+    };
+
+    return OpenMapSurfer_Roads;
 }

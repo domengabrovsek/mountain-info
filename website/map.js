@@ -11,9 +11,9 @@ const URL = "http://localhost:3000/mountains";
 function onLoad(params) {
     markacija = L.icon({
         iconUrl:  './img/markacija.png',
-        iconSize: [32, 32],
+        iconSize: [24, 24],
         iconAnchor: [0, 0],
-        popupAnchor: [16, 16]
+        popupAnchor: [12, 12]
       });
     initMap();
     displayAllData();
