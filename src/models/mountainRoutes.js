@@ -8,6 +8,9 @@ const mountainRoutesScheme = new mongoose.Schema({
         type: Number,
         unique: true,
     },
+    mountain: {
+        type: Object
+    },
     name: {
         type: String,
         trim: true,
@@ -33,16 +36,6 @@ const mountainRoutesScheme = new mongoose.Schema({
     endName: {
         type: String,
         trim: true
-    },
-    endCoordinates: {
-        N: {
-            type: String,
-            trim: true
-        },
-        E: {
-            type: String,
-            trim: true
-        }
     },
     difficultLevel: {
         type: String,
