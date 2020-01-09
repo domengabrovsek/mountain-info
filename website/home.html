@@ -109,11 +109,20 @@
         </div>
         <div class="toast-body">Body</div>
     </div>
+
     <!-- The sidebar -->
-    <div class="sidenav-btn" onclick="toggleNav()"><img src="./img/markacija.png"></img><i class="material-icons toggle-text">swap_horiz</i></div>
+    <div id="sidenav-btn" class="advanced container">
+        <button id="more-opt" class="sidenav-btn" onclick="toggleNav()">
+            <i class="material-icons noselect toggle-text">dehaze</i>
+        </button>
+    </div>
+    <!--
+    <div class="sidenav-btn" onclick="toggleNav()">
+        <img class="sidenav-img" src="./img/markacija.png"></img><i class="material-icons toggle-text">dehaze</i></div>
+        -->
     <div id="sidebar" class="sidenav">
         <a href="home.html"><i class="material-icons">home</i> Home</a>
-        <a onclick="randomId()"><i class="material-icons">casino</i> Random mountain</a>
+        <a onclick="return randomId()" style="cursor: pointer;"><i class="material-icons">casino</i> Random mountain</a>
         <a href="map.html"><i class="material-icons">map</i> Map</a>
         <a href="#"><i class="material-icons">info_outline</i> About</a>
     </div>
