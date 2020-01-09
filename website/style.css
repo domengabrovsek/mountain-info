@@ -35,10 +35,11 @@ body {
     background-color: #eeeeee;
 }
 
-img {
+#logo > img {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    min-width: 215px;
     width: 30%;
 }
 
@@ -308,7 +309,7 @@ button {
     padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
-    color: whitesmoke;
+    color: white;
     display: block;
     transition: 0.3s;
   }
@@ -330,26 +331,57 @@ button {
     .sidenav a {font-size: 18px;}
   }
 
-  .sidenav-btn {
+  /*.sidenav-btn {
       cursor: pointer;
       position: absolute;
       top: 5px;
-      left: -15px;
+      left: calc(-14px - calc(64px - calc(64px / 5 * var(--column-count))));
       text-align: right;
       z-index: 2;
-  }
+  }*/
 
-  .sidenav-btn > img {
-      width: auto;
-      height: auto;
-  }
+.sidenav-btn:active {
+    background-color: #940000;
+    outline: none;
+}
 
-  .toggle-text {
+.sidenav-btn:focus {
+    box-shadow: 0 0 3pt 2pt #ff654f;
+    outline: none;
+}
+
+.sidenav-btn {
+    background-color: #CD2F25;
+    color: white;
+    font-size: 16px;
+    border-radius: 0px 18px 18px 0px;
+    height: 32px;
+    box-sizing: border-box;
+    margin: 0 auto 0 auto;
+    padding-left: 8px;
+    padding-right: 30px;
+    display:inline-block;
+    position: absolute;
+    top: 8px;
+    left: 0px;
+    z-index: 2;
+}
+
+.toggle-text {
+    margin-top: 4%;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-  }
+}
+/*
+  .sidenav-img {
+    width: calc(100% / 5 * var(--column-count));
+    height: calc(100% / 5 * var(--column-count));
+    max-width: 64px;
+    height: auto;
+    cursor: pointer;
+  }*/
 
 
 
@@ -363,6 +395,7 @@ button {
     background-color: white;
     justify-content: center;
     border-radius: 8px;
+    cursor: pointer;
     margin:20px auto 20px auto;
 }
 
@@ -454,7 +487,33 @@ button {
     margin: 18px 20px 20px 0;
 }
 
+.more-details {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 90%;
+    margin: auto;
+}
 
+.left-margin {
+    margin-left: 1vw;
+}
+
+/* map in details */
+.details-small{
+    display: flex;
+    flex-direction: column;
+    flex-basis: 100%;
+    flex: 1;
+    width:40%;
+    height: 38vh;
+    background-color: white;
+    flex-wrap: wrap;
+    align-items:flex-start;
+    align-content:flex-start;
+    border-radius: 22px;   
+    margin-top: 1vh;
+}
 
 /* DETAILS GALLERY*/
 ul {

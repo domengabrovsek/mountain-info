@@ -5,11 +5,15 @@ let searchButton;
 let searchInputAll;
 let options;
 let toggleAdvencedOptions;
+let advancedOptionsStatus;
 let sidenavButton;
+let randomMountain;
 
 /* Default */
 const SEARCHBOX_HEIGHT = '44px';
+const NUMBER_OF_ITEMS = 20;
 const URL_NAME = "http://localhost:3000/mountain/name/:name";
+const URL_ID = "http://localhost:3000/mountain/:id";
 const URL_MIN_MAX_HEIGHT = "http://localhost:3000/mountain/min/:min/max/:max";
 const URL_MIN_HEIGHT = "http://localhost:3000/mountain/altitude/:altitude";
 
@@ -34,7 +38,10 @@ function init(params) {
     searchInputAll = document.getElementById("search-input-all");
     options = document.getElementById("options");
     toggleAdvencedOptions = document.getElementById("more-opt");
+    advancedOptionsStatus = false;
     sidenavButton = document.getElementsByClassName("sidenav-btn")[0];
+
+    randomMountain = false;
 
     nameOpt = document.getElementById("name");
     heightOpt = document.getElementById("height");
@@ -63,6 +70,7 @@ function init(params) {
 }
 
 function toggleOptions() {
+    advancedOptionsStatus = !advancedOptionsStatus;
     //console.log("toggle options");
     $(options).slideToggle(400);
 }
@@ -138,6 +146,11 @@ function getData(params) {
     let sbox = document.getElementById("search-box");
     sbox.style.borderRadius = "0px 0px 22px 22px";
     
+    /* close advanced options */
+    if (advancedOptionsStatus) {
+        toggleOptions();
+    }
+
     /* Check if no advanced options are selected */
     if (selectedOptions.size == 0) {
         let searchPhrases = $(searchInputAll).val().trim().split(/\s+/);
@@ -242,21 +255,25 @@ function forwardToSite() {
     *   are in map result
     */
 
-    //deletes previous results
-    let resContainer = document.getElementById("results");
-    resContainer.innerHTML = "";
-    
-    var stev = 0;
-    result.forEach(element => {
-        var el = makeResultItem(element);
-        el.setAttribute("data-index", stev);
-        el.addEventListener("click" , details);
-        stev++;
-        resContainer.appendChild(el);
-    });
-
-
-
+    if (randomMountain) {
+        randomMountain = false;
+        console.log(Array.from(result)[0][1]);
+        localStorage.setItem("details",JSON.stringify(Array.from(result)[0][1]));
+        location.pathname = "/website/details.html";
+    } else {
+        //deletes previous results
+        let resContainer = document.getElementById("results");
+        resContainer.innerHTML = "";
+        
+        var stev = 0;
+        result.forEach(element => {
+            var el = makeResultItem(element);
+            el.setAttribute("data-index", stev);
+            el.addEventListener("click" , details);
+            stev++;
+            resContainer.appendChild(el);
+        });
+    }
     //tmp solution only for testing
     //result = new Map();
 }
@@ -264,9 +281,16 @@ function forwardToSite() {
 function convertData(data, callback) {
     result = new Map();
     /* save all mountains from search to result map */
-    data.forEach(element => {
-        result.set(element.name, element);
-    });
+
+    if (Array.isArray(data)) {
+        console.log("is array");
+        data.forEach(element => {
+            result.set(element.name, element);
+        });
+    } else {
+        console.log("is not array");
+        result.set(data.name, data);
+    }
     numberOfWaitingResults--;
     if (numberOfWaitingResults == 0) {
         callback();
@@ -290,8 +314,10 @@ function loadJSON(path, success, error) {
                 if (success)
                     success(JSON.parse(xhr.responseText), forwardToSite);
             } else {
-                if (error)
+                if (error) {
                     console.log(xhr);
+                    error();
+                }   
             }
         }
     };
@@ -301,8 +327,11 @@ function loadJSON(path, success, error) {
 
 function randomId() {
     //TODO
-    window.location.href = "#";
-    return true;
+    numberOfWaitingResults = 0;
+    randomMountain = true;
+    let id = Math.floor(Math.random() * NUMBER_OF_ITEMS - 1) + 1;
+
+    loadJSON(URL_ID.replace(":id", id), convertData, randomId);
 }
 
 /* Show error/warning toast */

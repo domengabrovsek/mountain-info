@@ -15,6 +15,11 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
     <link rel="stylesheet" href="style.css">
     <script src="./details.js"></script>
 
@@ -43,15 +48,24 @@
                 laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
                 velit esse cillum dolore eu fugiat nulla pariatur.</p>
         </div>
+    </div>
 
-        <div class="sidenav-btn" onclick="toggleNav()"><img src="./img/markacija.png"></img><i
-                class="material-icons toggle-text">swap_horiz</i></div>
-        <div id="sidebar" class="sidenav">
-            <a href="home.html"><i class="material-icons">home</i> Home</a>
-            <a onclick="randomId()"><i class="material-icons">casino</i> Random mountain</a>
-            <a href="map.html"><i class="material-icons">map</i> Map</a>
-            <a href="#"><i class="material-icons">info_outline</i> About</a>
-        </div>
+    <div class="more-details" >
+        <div class="details-small weather"></div>
+        <div class="details-small left-margin" id="map"></div>
+    </div>
+
+    <div id="sidenav-btn" class="advanced container">
+        <button id="more-opt" class="sidenav-btn" onclick="toggleNav()">
+            <i class="material-icons noselect toggle-text">dehaze</i>
+        </button>
+    </div>
+    <div id="sidebar" class="sidenav">
+        <a href="home.html"><i class="material-icons">home</i> Home</a>
+        <a onclick="randomId()"><i class="material-icons">casino</i> Random mountain</a>
+        <a href="map.html"><i class="material-icons">map</i> Map</a>
+        <a href="#"><i class="material-icons">info_outline</i> About</a>
+    </div>
 </body>
 
 </html>

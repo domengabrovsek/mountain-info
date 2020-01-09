@@ -3,6 +3,7 @@ let map;
 let baseLayers;
 let overlayLayers;
 let markacija;
+let data;
 const markers = L.markerClusterGroup();
 
 const URL = "http://localhost:3000/mountains";
@@ -10,9 +11,9 @@ const URL = "http://localhost:3000/mountains";
 function onLoad(params) {
     markacija = L.icon({
         iconUrl:  './img/markacija.png',
-        iconSize: [32, 32],
+        iconSize: [24, 24],
         iconAnchor: [0, 0],
-        popupAnchor: [16, 16]
+        popupAnchor: [12, 12]
       });
     initMap();
     displayAllData();
@@ -80,8 +81,9 @@ function displayAllData(params) {
     markers.addTo(map);
 }
 
-function addMarker(data) {
+function addMarker(result) {
     //db data
+    data = result;
     console.log(data);
 
     for (let i = 0; i < data.length; i++) {
@@ -90,13 +92,22 @@ function addMarker(data) {
         const name = element.name;
         const mountainRange = element.mountainRange;
         const altitude = element.altitude;
+        const position = i;
         //fix for commas as decimal
         let coordinatesArray = [];
         coordinatesArray[0] = parseFloat(coordinates.N.replace(",", "."));
         coordinatesArray[1] = parseFloat(coordinates.E.replace(",", "."));
         //add marker to marker group
-        markers.addLayer(L.marker(coordinatesArray, {icon: markacija}).bindPopup(name +"<br>"+altitude+"m<br>"+mountainRange));
+        markers.addLayer(L.marker(coordinatesArray, {icon: markacija}).bindPopup(
+            "<a onclick='openMountain("+position+")' style='cursor: pointer;'>"+name +"<br>"+altitude+"m<br>"+mountainRange+"</a>"));
     }    
+}
+
+function openMountain(params) {
+    console.log("opening mountain: "+data[params].name);
+    console.log(Array.from(data)[params]);
+    localStorage.setItem("details",JSON.stringify(Array.from(data)[params]));
+    location.pathname = "/website/details.html";
 }
 
 function loadJSON(path, success, error)
