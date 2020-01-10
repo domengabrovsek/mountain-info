@@ -7,6 +7,8 @@ let data;
 const markers = L.markerClusterGroup();
 
 const URL = "http://localhost:3000/mountains";
+const URL_ID = "http://localhost:3000/mountain/:id";
+const NUMBER_OF_ITEMS = 20;
 
 function onLoad(params) {
     markacija = L.icon({
@@ -154,4 +156,11 @@ function toggleNav() {
             { left: '-=12.5vw', width: '+=12.5vw'}, { duration: 200, queue: false }
         );
     }  
+}
+
+function randomId() {
+    randomMountain = true;
+    let id = Math.floor(Math.random() * NUMBER_OF_ITEMS - 1) + 1;
+
+    loadJSON(URL_ID.replace(":id", id), convertData, randomId);
 }
