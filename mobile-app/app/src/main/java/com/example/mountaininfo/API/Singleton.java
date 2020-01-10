@@ -35,8 +35,6 @@ public class Singleton {
                 .addInterceptor(logging)
                 .build();
 
-        //Moshi moshi = new Moshi.Builder().build();
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://10.0.2.2:3000/")
                 .client(okhttp)

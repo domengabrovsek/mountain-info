@@ -1,13 +1,11 @@
 package com.example.mountaininfo.API;
 
-
-
-import java.util.List;
-
 public class APIResults {
 
 
     class Route {
+        Coordinates startCoordinates;
+        int id;
         String name;
         String startName;
         String endName;
@@ -18,10 +16,17 @@ public class APIResults {
     }
 
     class Mountain {
+        Coordinates coordinates;
+        int id;
         String name;
         String country;
         String mountainRane;
-        String altitude;
+        int altitude;
+    }
+
+    class Coordinates{
+        String N;
+        String E;
     }
 
 }
