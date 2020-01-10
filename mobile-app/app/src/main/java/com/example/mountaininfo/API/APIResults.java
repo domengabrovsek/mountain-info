@@ -3,7 +3,7 @@ package com.example.mountaininfo.API;
 public class APIResults {
 
 
-    class Route {
+    public class Route {
         Coordinates startCoordinates;
         int id;
         String name;
@@ -13,18 +13,34 @@ public class APIResults {
         String difficultLevel;
         String altitudeDifference;
         Mountain mtn;
+
+        public String getName(){
+            return name;
+        }
     }
 
-    class Mountain {
+    public class Mountain {
         Coordinates coordinates;
         int id;
         String name;
         String country;
-        String mountainRane;
+        String mountainRange;
         int altitude;
+
+        public String getName(){
+            return name;
+        }
+
+        public String getRange(){
+            return mountainRange;
+        }
+
+        public int getAltitude(){
+            return altitude;
+        }
     }
 
-    class Coordinates{
+    public class Coordinates{
         String N;
         String E;
     }

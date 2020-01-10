@@ -17,6 +17,7 @@ public class SearchActivity extends AppCompatActivity {
 
     EditText searchBar;
     TextView name, height, minHeight, maxHeight, mountainRange;
+    TextView go;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class SearchActivity extends AppCompatActivity {
         minHeight = findViewById(R.id.minHeight);
         maxHeight = findViewById(R.id.maxHeight);
         mountainRange = findViewById(R.id.mountainRange);
+        go = findViewById(R.id.go);
     }
 
     void initOnClickListeners(){
@@ -70,6 +72,13 @@ public class SearchActivity extends AppCompatActivity {
             public void onClick(View view) {
                 searchBar.setText(searchBar.getText() + "mountainRange: ");
                 searchBar.setSelection(searchBar.getText().length());
+            }
+        });
+        go.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View view) {
+                startActivity(SearchResultActivity.returnSearchResultActivityIntent(SearchActivity.this));
             }
         });
     }
