@@ -374,14 +374,6 @@ button {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-/*
-  .sidenav-img {
-    width: calc(100% / 5 * var(--column-count));
-    height: calc(100% / 5 * var(--column-count));
-    max-width: 64px;
-    height: auto;
-    cursor: pointer;
-  }*/
 
 
 
@@ -505,6 +497,7 @@ button {
     flex-direction: column;
     flex-basis: 100%;
     flex: 1;
+    min-width:40%;
     width:40%;
     height: 38vh;
     background-color: white;
@@ -580,6 +573,20 @@ margin: 0;
         display: block;
         width: 80%;
     }
+    .left-margin {
+        margin-left: auto;
+    }
+    .details-small {
+        display: block;
+        width: 100%;
+        flex-direction: unset;
+        margin-bottom: 16px;
+    }
+    .more-details {
+        display: block;
+        width: 80%;
+        flex-direction: unset;
+    }
     .product-gallery{
         width: calc(100% - 30px);
         margin: 30px auto 30px auto;
@@ -588,7 +595,7 @@ margin: 0;
     .details-text-wrapper{
         width: calc(100% - 30px);
         margin: auto;
-        margin-bottom: 30px;
+        /*margin-bottom: 30px;*/
     }
     .details-heading{
         width: calc(100% - 30px);
@@ -599,6 +606,15 @@ margin: 0;
 @media screen and (max-width: 600px) {
     .details{
         display: block;
+    }
+    .left-margin {
+        margin-left: auto;
+    }
+    .details-small {
+        display: block;
+        width: 100%;
+        flex-direction: unset;
+        margin-bottom: 16px;
     }
     .product-gallery{
         max-width: calc(100% - 20px);
@@ -611,4 +627,44 @@ margin: 0;
         width: calc(100% - 20px);
         margin: 10px auto 10px auto;
     }   
+}
+
+/* paths */
+
+#ourCarousel {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.carousel-inner {
+    width: 80%;
+    height: 90%;
+    left: 10%;
+}
+
+.carousel-control-next, .carousel-control-prev, .carousel-indicators{
+    filter: invert();
+}
+
+.carousel-control-next, .carousel-control-prev {
+    width: 10%;
+}
+
+.details-path{
+    width:90%;
+    background-color: white;
+    display:flex;
+    flex-wrap: wrap;
+    align-items:flex-start;
+    align-content:flex-start;
+    border-radius: 22px;
+    margin: auto;
+    margin-top: 5vh;
+}
+
+.path-item-text {
+    vertical-align: top;
+    display: inline-block;
+    margin-left: 6px;
 }

@@ -326,7 +326,6 @@ function loadJSON(path, success, error) {
 }
 
 function randomId() {
-    //TODO
     numberOfWaitingResults = 0;
     randomMountain = true;
     let id = Math.floor(Math.random() * NUMBER_OF_ITEMS - 1) + 1;
