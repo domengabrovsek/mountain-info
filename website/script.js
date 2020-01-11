@@ -60,13 +60,29 @@ function init(params) {
         }
     });
 
+    window.onhashchange = function() { 
+        console.log("url changed");
+        console.log(window.location.hash);
+        if (window.location.hash == "#?v=result") {
+            if ($("#results").html() == "") {
+                showOldResults();
+            } else {
+                this.toggleLogo(true);
+            }
+        } else {
+            this.toggleLogo(false);
+            let resContainer = document.getElementById("results");
+            resContainer.innerHTML = "";
+            result = new this.Map();
+        }
+    }
+
     /* Toggle more options */
     toggleAdvencedOptions.addEventListener("click", toggleOptions, true);
 
-    /*$(document).click(function(event) {
-        var text = $(event.target);
-        console.log(text);
-    });*/
+    if (window.location.hash == "#?v=result") {
+        showOldResults();
+    }
 }
 
 function toggleOptions() {
@@ -94,7 +110,7 @@ function clickOnOption(option) {
         /* Move option to search bar */
         searchBox.appendChild(option.parentElement);
     }
-    /* If no options are selected shoe universal input */
+    /* If no options are selected show universal input */
     if (selectedOptions.size == 0) {
         searchInputAll.style.visibility = "visible";
     }
@@ -134,17 +150,37 @@ function clickOnOption(option) {
 }
 
 function checkSearchBoxSize(params) {
-    //console.log($(searchBox).height());
     document.documentElement.style.setProperty('--searchbox-height', $(searchBox).height() + "px");
+}
+
+function toggleLogo(hide) {
+    if (hide) {
+        //move logo away
+        $("#logo-img").animate({
+            height: 'toggle',
+            width: 'toggle'
+          });
+        let sbox = document.getElementById("search-box");
+        sbox.style.borderRadius = "0px 0px 22px 22px";
+    } else {
+        $("#logo-img").animate({
+            height: 'toggle',
+            width: 'toggle'
+          });
+        let sbox = document.getElementById("search-box");
+        sbox.style.borderRadius = "22px 22px 22px 22px";
+    }
 }
 
 function getData(params) {
 
+    /*
     //move logo away
     let logo = document.getElementById("logo");
     logo.style.display = "none";
     let sbox = document.getElementById("search-box");
     sbox.style.borderRadius = "0px 0px 22px 22px";
+    */
     
     /* close advanced options */
     if (advancedOptionsStatus) {
@@ -248,19 +284,30 @@ function getData(params) {
     }
 }
 
+function showOldResults() {
+    toggleLogo(true);
+    result = new Map(JSON.parse(sessionStorage.results));
+    forwardToSite();
+}
+
 function forwardToSite() {
     console.log(result);
 
     /*  all the mountains from search result 
     *   are in map result
     */
-
-    if (randomMountain) {
+    if (result.size == 0) {
+        errorToast("NOTHING FOUND!", "Please change you search parametres.");
+    } else if (randomMountain) {
         randomMountain = false;
         console.log(Array.from(result)[0][1]);
         localStorage.setItem("details",JSON.stringify(Array.from(result)[0][1]));
         location.pathname = "/website/details.html";
     } else {
+
+        /* save to localstorage for back */
+        sessionStorage.setItem("results", JSON.stringify(Array.from(result.entries())));
+
         //deletes previous results
         let resContainer = document.getElementById("results");
         resContainer.innerHTML = "";
@@ -273,6 +320,8 @@ function forwardToSite() {
             stev++;
             resContainer.appendChild(el);
         });
+
+        window.location.hash = "?v=result";
     }
     //tmp solution only for testing
     //result = new Map();
@@ -302,7 +351,9 @@ function details(){
     var id =  event.currentTarget.getAttribute("data-index");
     console.log(Array.from(result)[id][1]);
     localStorage.setItem("details",JSON.stringify(Array.from(result)[id][1]));
-    location.pathname = "/website/details.html";
+    //window.location.hash = "";
+    //location.pathname = "/website/details.html";
+    window.location.href = "./details.html"
 }
 
 function loadJSON(path, success, error) {

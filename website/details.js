@@ -61,7 +61,7 @@ function loadJSON(path, success, error) {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
                 console.log(JSON.parse(xhr.responseText));
-                if (success !== undefined) {
+                if (success) {
                     success(JSON.parse(xhr.responseText), createCarouselItems);
                 }
             } else {
