@@ -19,8 +19,12 @@ import java.util.List;
 public class MountainDetails extends AppCompatActivity {
 
     private static String ID = "ID";
+    private static String MOUNTAINNAME = "MOUNTAINNAME";
+    private static String MOUNTAINRANGE = "MOUNTAINRANGE";
+    private static String MOUNTAINALT = "MOUNTAINALT";
 
     private int mountainId;
+    private String mountainName, mountainRange, mountainAlt;
     DataViewModel viewModel = null;
 
     List<APIResults.Route> routes;
@@ -28,10 +32,14 @@ public class MountainDetails extends AppCompatActivity {
 
     ImageView arrowRight, arrowLeft;
     TextView name, start, finish, time, altitudeDif, difficulty;
+    TextView mountainNameTv, mountainRangeTv, mountainAltitudeTv;
 
-    static Intent returnMountainDetails(Context ctx, int id){
+    static Intent returnMountainDetails(Context ctx, int id, String name, String range, String alt){
         Intent intent = new Intent(ctx, MountainDetails.class);
         intent.putExtra(ID, id);
+        intent.putExtra(MOUNTAINNAME, name);
+        intent.putExtra(MOUNTAINRANGE, range);
+        intent.putExtra(MOUNTAINALT, alt);
         return intent;
     }
 
@@ -63,6 +71,10 @@ public class MountainDetails extends AppCompatActivity {
     void initViews(){
         arrowRight = findViewById(R.id.arrowRight);
         arrowLeft = findViewById(R.id.arrowLeft);
+
+        mountainNameTv = findViewById(R.id.mountainName);
+        mountainRangeTv = findViewById(R.id.mountainRange);
+        mountainAltitudeTv = findViewById(R.id.mountainAltitude);
 
         name = findViewById(R.id.routeName);
         start = findViewById(R.id.routeStart);
@@ -110,5 +122,12 @@ public class MountainDetails extends AppCompatActivity {
     void getDataFromIntent(){
         Intent intent = getIntent();
         mountainId = intent.getIntExtra(ID, -1);
+        mountainName = intent.getStringExtra(MOUNTAINNAME);
+        mountainRange = intent.getStringExtra(MOUNTAINRANGE);
+        mountainAlt = intent.getStringExtra(MOUNTAINALT);
+
+        mountainNameTv.setText(mountainName);
+        mountainRangeTv.setText(mountainRange);
+        mountainAltitudeTv.setText(mountainAlt);
     }
 }

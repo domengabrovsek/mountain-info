@@ -92,7 +92,11 @@ public class SearchResultActivity extends AppCompatActivity {
             @Override
             public void onItemClick(int position) {
                 int id = mountains.get(position).getId();
-                startActivity(MountainDetails.returnMountainDetails(SearchResultActivity.this, id));
+                String name = mountains.get(position).getName();
+                String range = mountains.get(position).getRange();
+                String alt = Integer.toString(mountains.get(position).getAltitude());
+                startActivity(MountainDetails.returnMountainDetails(SearchResultActivity.this,
+                        id, name, range, alt));
             }
         });
     }
