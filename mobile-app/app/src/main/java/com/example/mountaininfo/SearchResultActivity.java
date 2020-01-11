@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 
 import com.example.mountaininfo.API.APIResults;
 import com.example.mountaininfo.API.DataViewModel;
@@ -20,14 +21,23 @@ import java.util.List;
 
 public class SearchResultActivity extends AppCompatActivity {
 
+    private static String APICALL = "APICALL";
+    private static String MOUNTAIN_NAME = "MOUNTAIN_NAME";
+
     private RecyclerView recyclerView;
     private MountainAdapter adapter;
     private RecyclerView.LayoutManager manager;
     DataViewModel viewModel = null;
 
+    private int apiCall;
+    private String mountainName;
 
-    static Intent returnSearchResultActivityIntent(Context ctx) {
-        return new Intent(ctx, SearchResultActivity.class);
+    static Intent returnSearchResultActivityIntent(Context ctx, int apiCall, String mountainName) {
+        Intent intent = new Intent(ctx, SearchResultActivity.class);
+        intent.putExtra(APICALL, apiCall);
+        intent.putExtra(MOUNTAIN_NAME, mountainName);
+
+        return intent;
     }
 
     @Override
@@ -36,9 +46,25 @@ public class SearchResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search_result);
         viewModel = ViewModelProviders.of(this).get(DataViewModel.class);
 
+        getDataFromIntent();
+
         initObserver();
 
-        viewModel.loadMountains(); //API call
+        executeApiCall();
+    }
+
+    void getDataFromIntent(){
+        Intent intent = getIntent();
+        apiCall = intent.getIntExtra(APICALL, -1);
+        mountainName = intent.getStringExtra(MOUNTAIN_NAME);
+    }
+
+    void executeApiCall(){
+        switch (apiCall){
+            case 0: viewModel.getMountainsByName(mountainName); break; //get mountains by nameBool
+            case 1: break; //get mountains by altitudeBool
+            case 2: break; //get mountains by altitudeBool range
+        }
     }
 
     void initObserver(){

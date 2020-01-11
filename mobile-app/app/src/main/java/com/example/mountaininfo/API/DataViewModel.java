@@ -1,12 +1,9 @@
 package com.example.mountaininfo.API;
 
 import android.util.Log;
-
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,6 +40,25 @@ public class DataViewModel extends ViewModel {
         Singleton.getService().getMountains().enqueue(new Callback<List<APIResults.Mountain>>(){
 
 
+            @Override
+            public void onResponse(Call<List<APIResults.Mountain>> call, Response<List<APIResults.Mountain>> response) {
+                if(response.isSuccessful()){
+                    List<APIResults.Mountain> body = response.body();
+                    if(body != null){
+                        mountains.postValue(body);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<APIResults.Mountain>> call, Throwable t) {
+                Log.d("Fail","failllll");
+            }
+        });
+    }
+
+    public void getMountainsByName(String name){
+        Singleton.getService().getMountainsByName(name).enqueue(new Callback<List<APIResults.Mountain>>() {
             @Override
             public void onResponse(Call<List<APIResults.Mountain>> call, Response<List<APIResults.Mountain>> response) {
                 if(response.isSuccessful()){
