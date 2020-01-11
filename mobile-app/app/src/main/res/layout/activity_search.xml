@@ -64,7 +64,7 @@
         android:id="@+id/height"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="HEIGHT"
+        android:text="ALTITUDE"
         android:textColor="@color/white"
         android:background="@drawable/rectangle_red"
         android:paddingStart="8dp"
@@ -80,7 +80,7 @@
         android:id="@+id/minHeight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MIN HEIGHT"
+        android:text="MIN ALTITUDE"
         android:textColor="@color/white"
         android:background="@drawable/rectangle_red"
         android:paddingStart="8dp"
@@ -96,7 +96,7 @@
         android:id="@+id/maxHeight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MAX HEIGHT"
+        android:text="MAX ALTITUDE"
         android:textColor="@color/white"
         android:background="@drawable/rectangle_red"
         android:paddingStart="8dp"
@@ -107,22 +107,6 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/minHeight"/>
-
-    <TextView
-        android:id="@+id/mountainRange"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="MOUNTAIN RANGE"
-        android:textColor="@color/white"
-        android:background="@drawable/rectangle_red"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/maxHeight"/>
 
 
 
