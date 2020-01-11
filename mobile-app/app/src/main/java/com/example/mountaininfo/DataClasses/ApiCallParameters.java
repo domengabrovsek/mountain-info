@@ -4,11 +4,11 @@ public class ApiCallParameters {
 
     private int call;
     private String name;
-    private int altitude;
-    private int minAltitude;
-    private int maxAltitude;
+    private String altitude;
+    private String minAltitude;
+    private String maxAltitude;
 
-    public ApiCallParameters(int call, String name, int altitude, int minAltitude, int maxAltitude) {
+    public ApiCallParameters(int call, String name, String altitude, String minAltitude, String maxAltitude) {
         this.call = call;
         this.name = name;
         this.altitude = altitude;
@@ -24,15 +24,15 @@ public class ApiCallParameters {
         return name;
     }
 
-    public int getAltitude() {
+    public String getAltitude() {
         return altitude;
     }
 
-    public int getMinAltitude() {
+    public String getMinAltitude() {
         return minAltitude;
     }
 
-    public int getMaxAltitude() {
+    public String getMaxAltitude() {
         return maxAltitude;
     }
 }

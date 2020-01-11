@@ -9,9 +9,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mountaininfo.API.DataViewModel;
 import com.example.mountaininfo.DataClasses.ApiCallParameters;
+
+import java.util.Arrays;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -24,19 +27,11 @@ public class SearchActivity extends AppCompatActivity {
     TextView go;
     DataViewModel viewModel;
 
-    boolean nameBool, altitudeBool, minAltitudeBool, maxAltitudeBool;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         viewModel = ViewModelProviders.of(this).get(DataViewModel.class);
-
-        //flags to see which "button" was pressed
-        nameBool = false;
-        altitudeBool = false;
-        minAltitudeBool = false;
-        maxAltitudeBool = false;
 
         initViews();
         initOnClickListeners();
@@ -55,7 +50,6 @@ public class SearchActivity extends AppCompatActivity {
         nameTv.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                nameBool = true;
                 searchBar.setText(searchBar.getText() + "Name: ");
                 searchBar.setSelection(searchBar.getText().length());
             }
@@ -63,7 +57,6 @@ public class SearchActivity extends AppCompatActivity {
         altitudeTv.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                altitudeBool = true;
                 searchBar.setText(searchBar.getText() + "Altitude: ");
                 searchBar.setSelection(searchBar.getText().length());
             }
@@ -71,16 +64,14 @@ public class SearchActivity extends AppCompatActivity {
         minAltitudeTv.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                minAltitudeBool = true;
-                searchBar.setText(searchBar.getText() + "minAltitudeBool: ");
+                searchBar.setText(searchBar.getText() + "minAltitude: ");
                 searchBar.setSelection(searchBar.getText().length());
             }
         });
         maxAltitudeTv.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                maxAltitudeBool = true;
-                searchBar.setText(searchBar.getText() + "maxAltitudeBool: ");
+                searchBar.setText(searchBar.getText() + " maxAltitude: ");
                 searchBar.setSelection(searchBar.getText().length());
             }
         });
@@ -89,31 +80,60 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ApiCallParameters params = getApiCallParameters();
-                startActivity(SearchResultActivity.returnSearchResultActivityIntent(
-                        SearchActivity.this, params.getCall(), params.getName()));
-                finish();
+                if(searchBar.getText().toString().equals("") || params.getCall() == -1){
+                    Toast.makeText(SearchActivity.this, "Invalid search!", Toast.LENGTH_LONG).show();
+                } else{
+                    startActivity(SearchResultActivity.returnSearchResultActivityIntent(
+                            SearchActivity.this, params.getCall(), params.getName(), params.getAltitude(),
+                            params.getMinAltitude(), params.getMaxAltitude()));
+                    finish();
+                }
             }
         });
     }
 
     ApiCallParameters getApiCallParameters(){
-        //ApiCallPArameters will determine which api call to execute in SearchResult activity
+        //ApiCallParameters will determine which api call to execute in SearchResult activity
         int apiCall = -1;
         String name = "";
-        int altitude = -1;
-        int minAltitude = -1;
-        int maxAltitude = -1;
+        String altitude = "";
+        String minAltitude = "";
+        String maxAltitude = "";
 
         String search = searchBar.getText().toString();
-
-        if(nameBool && search.contains("Name:")){
-            apiCall = 0;
-            name = search.split(":")[1];
-        }else if(altitudeBool && search.contains("Altitude:")){
-            apiCall = 1;
-        }else if(minAltitudeBool && search.contains("minAltitudeBool:")
-                && maxAltitudeBool && search.contains("maxAltitudeBool:")) {
-            apiCall = 2;
+        if(search.split(":").length == 1){ //only text or number
+            try{
+                Integer.parseInt(search);
+                altitude = search;
+                apiCall = 1;
+            }catch (Exception e){
+                name = search;
+                apiCall = 0;
+            }
+        }else if(search.split(":").length == 2){ //Name: name or Altitude: number
+            if(search.contains("Name:")){
+                apiCall = 0;
+                String [] list = search.split(":");
+                if(list.length > 0) name = list[1];
+            }else if(search.contains("Altitude:")){
+                String [] list = search.split(": ");
+                try{
+                    Integer.parseInt(list[1]);
+                    altitude = list[1];
+                    apiCall = 1;
+                }catch (Exception e){}
+            }
+        } else{
+            if(search.contains("minAltitude:") && search.contains("maxAltitude:")) {
+                String [] list = search.split(": ");
+                minAltitude = list[1].split(" ")[0];
+                maxAltitude = list[2];
+                try{
+                    Integer.parseInt(minAltitude);
+                    Integer.parseInt(maxAltitude);
+                    apiCall = 2;
+                }catch (Exception e){}
+            }
         }
         return new ApiCallParameters(apiCall, name, altitude, minAltitude, maxAltitude);
     }

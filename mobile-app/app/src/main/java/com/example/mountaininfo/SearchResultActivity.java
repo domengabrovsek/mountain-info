@@ -23,6 +23,9 @@ public class SearchResultActivity extends AppCompatActivity {
 
     private static String APICALL = "APICALL";
     private static String MOUNTAIN_NAME = "MOUNTAIN_NAME";
+    private static String ALTITUDE = "ALTITUDE";
+    private static String MINALTITUDE = "MINALTITUDE";
+    private static String MAXALTITUDE = "MAXALTITUDE";
 
     private RecyclerView recyclerView;
     private MountainAdapter adapter;
@@ -31,11 +34,16 @@ public class SearchResultActivity extends AppCompatActivity {
 
     private int apiCall;
     private String mountainName;
+    private String altitude, minAltitude, maxAltitude;
 
-    static Intent returnSearchResultActivityIntent(Context ctx, int apiCall, String mountainName) {
+    static Intent returnSearchResultActivityIntent(Context ctx, int apiCall, String mountainName,
+                                                   String altitude, String minAltitude, String maxAltitude) {
         Intent intent = new Intent(ctx, SearchResultActivity.class);
         intent.putExtra(APICALL, apiCall);
         intent.putExtra(MOUNTAIN_NAME, mountainName);
+        intent.putExtra(ALTITUDE, altitude);
+        intent.putExtra(MINALTITUDE, minAltitude);
+        intent.putExtra(MAXALTITUDE, maxAltitude);
 
         return intent;
     }
@@ -57,13 +65,16 @@ public class SearchResultActivity extends AppCompatActivity {
         Intent intent = getIntent();
         apiCall = intent.getIntExtra(APICALL, -1);
         mountainName = intent.getStringExtra(MOUNTAIN_NAME);
+        altitude = intent.getStringExtra(ALTITUDE);
+        minAltitude = intent.getStringExtra(MINALTITUDE);
+        maxAltitude = intent.getStringExtra(MAXALTITUDE);
     }
 
     void executeApiCall(){
         switch (apiCall){
-            case 0: viewModel.getMountainsByName(mountainName); break; //get mountains by nameBool
-            case 1: break; //get mountains by altitudeBool
-            case 2: break; //get mountains by altitudeBool range
+            case 0: viewModel.getMountainsByName(mountainName); break; //get mountains by name
+            case 1: viewModel.getMountainsByAltitude(altitude); break; //get mountains by altitude
+            case 2: viewModel.getMountainsByAltitudeRange(minAltitude, maxAltitude); break; //get mountains by altitude range
         }
     }
 

@@ -75,4 +75,42 @@ public class DataViewModel extends ViewModel {
             }
         });
     }
+
+    public void getMountainsByAltitude(String altitude){
+        Singleton.getService().getMountainsByAltitude(altitude).enqueue(new Callback<List<APIResults.Mountain>>() {
+            @Override
+            public void onResponse(Call<List<APIResults.Mountain>> call, Response<List<APIResults.Mountain>> response) {
+                if(response.isSuccessful()){
+                    List<APIResults.Mountain> body = response.body();
+                    if(body != null){
+                        mountains.postValue(body);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<APIResults.Mountain>> call, Throwable t) {
+                Log.d("Fail","failllll");
+            }
+        });
+    }
+
+    public void getMountainsByAltitudeRange(String min, String max){
+        Singleton.getService().getMountainsByAltitudeRange(min, max).enqueue(new Callback<List<APIResults.Mountain>>() {
+            @Override
+            public void onResponse(Call<List<APIResults.Mountain>> call, Response<List<APIResults.Mountain>> response) {
+                if(response.isSuccessful()){
+                    List<APIResults.Mountain> body = response.body();
+                    if(body != null){
+                        mountains.postValue(body);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<APIResults.Mountain>> call, Throwable t) {
+                Log.d("Fail","failllll");
+            }
+        });
+    }
 }
