@@ -107,78 +107,90 @@
 
     <TextView
         android:id="@+id/routeName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:layout_marginStart="45dp"
+        android:layout_marginEnd="45dp"
         android:textSize="20sp"
         android:textStyle="bold"
         android:text="Aljažev dom v Vratih - Škrlatica"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/routes"/>
 
     <TextView
         android:id="@+id/routeStart"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginStart="45dp"
+        android:layout_marginEnd="45dp"
         android:textSize="17sp"
         android:text="Aljažev dom v Vratih (1015 m)"
         android:drawableStart="@drawable/ic_start"
         android:drawablePadding="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/routeName"/>
 
     <TextView
         android:id="@+id/routeFinish"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginStart="45dp"
+        android:layout_marginEnd="45dp"
         android:textSize="17sp"
         android:text="Škrlatica (2740 m)"
         android:drawableStart="@drawable/ic_finish"
         android:drawablePadding="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/routeStart"/>
 
     <TextView
         android:id="@+id/routeTime"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginStart="45dp"
+        android:layout_marginEnd="45dp"
         android:textSize="17sp"
         android:text="6 h"
         android:drawableStart="@drawable/ic_time"
         android:drawablePadding="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/routeFinish"/>
 
     <TextView
         android:id="@+id/routeAltitudeDif"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginStart="45dp"
+        android:layout_marginEnd="45dp"
         android:textSize="17sp"
         android:text="1725 m"
         android:drawableStart="@drawable/ic_terrain"
         android:drawablePadding="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/routeTime"/>
 
     <TextView
         android:id="@+id/routeDifficulty"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginStart="45dp"
+        android:layout_marginEnd="45dp"
         android:textSize="17sp"
         android:text="zelo zahtevna označena pot"
         android:drawableStart="@drawable/ic_difficulty"
         android:drawablePadding="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/routeAltitudeDif"/>
 

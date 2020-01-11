@@ -17,6 +17,21 @@ public class APIResults {
         public String getName(){
             return name;
         }
+        public String getStartName(){
+            return startName;
+        }
+        public String getEndName(){
+            return endName;
+        }
+        public String getTime(){
+            return time;
+        }
+        public String getDifficultLevel(){
+            return difficultLevel;
+        }
+        public String getAltitudeDifference(){
+            return altitudeDifference;
+        }
     }
 
     public class Mountain {
