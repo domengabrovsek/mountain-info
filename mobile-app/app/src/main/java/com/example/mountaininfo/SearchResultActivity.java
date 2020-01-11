@@ -5,18 +5,12 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-
 import com.example.mountaininfo.API.APIResults;
 import com.example.mountaininfo.API.DataViewModel;
 import com.example.mountaininfo.Adapters.MountainAdapter;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResultActivity extends AppCompatActivity {
@@ -87,7 +81,7 @@ public class SearchResultActivity extends AppCompatActivity {
         });
     }
 
-    void updateUi(List<APIResults.Mountain> mountains){
+    void updateUi(final List<APIResults.Mountain> mountains){
         recyclerView = findViewById(R.id.recyclerView);
         adapter = new MountainAdapter(mountains);
         manager = new LinearLayoutManager(this);
@@ -97,8 +91,8 @@ public class SearchResultActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new MountainAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                System.out.println(position);
-                //TODO: obtain id and show detail screen
+                int id = mountains.get(position).getId();
+                MountainDetails.returnMountainDetails(SearchResultActivity.this, id);
             }
         });
     }

@@ -27,6 +27,8 @@ public class APIResults {
         String mountainRange;
         int altitude;
 
+        public int getId(){ return id; }
+
         public String getName(){
             return name;
         }

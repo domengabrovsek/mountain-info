@@ -11,9 +11,13 @@ import retrofit2.Response;
 public class DataViewModel extends ViewModel {
 
     MutableLiveData<List<APIResults.Mountain>> mountains = new MutableLiveData<>();
+    MutableLiveData<List<APIResults.Route>> routes = new MutableLiveData<>();
 
     public MutableLiveData<List<APIResults.Mountain>> getMountains(){
         return mountains;
+    }
+    public MutableLiveData<List<APIResults.Route>> getRoutes(){
+        return routes;
     }
 
     public void loadRoutes() {
@@ -109,6 +113,24 @@ public class DataViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<List<APIResults.Mountain>> call, Throwable t) {
+                Log.d("Fail","failllll");
+            }
+        });
+    }
+
+    public void getRoutesForMountainId(int id){
+        Singleton.getService().getAllRoutesForMountainById(Integer.toString(id)).enqueue(new Callback<List<APIResults.Route>>() {
+            @Override
+            public void onResponse(Call<List<APIResults.Route>> call, Response<List<APIResults.Route>> response) {
+                if(response.isSuccessful()){
+                    List<APIResults.Route> body = response.body();
+                    if(body != null){
+                        routes.postValue(body);
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<List<APIResults.Route>> call, Throwable t) {
                 Log.d("Fail","failllll");
             }
         });
