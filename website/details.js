@@ -31,7 +31,7 @@ function init(){
     //weather api
     var lon = data.coordinates.E.replace("," , ".");
     var lat = data.coordinates.N.replace("," , ".");
-    loadJSON("http://localhost:3000/weather/lat=" + lat + "&lon=" + lon);
+    loadJSONweather("http://localhost:3000/weather/lat=" + lat + "&lon=" + lon , parseWeather);
 
     /* paths */
     loadJSON(URL_ROUTES.replace(":id", data.id), saveData);
@@ -60,9 +60,26 @@ function loadJSON(path, success, error) {
     xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
             if (xhr.status === 200) {
-                console.log(JSON.parse(xhr.responseText));
                 if (success) {
                     success(JSON.parse(xhr.responseText), createCarouselItems);
+                }
+            } else {
+                if (error)
+                    console.log(xhr);
+            }
+        }
+    };
+    xhr.open("GET", path, true);
+    xhr.send();
+}
+
+function loadJSONweather(path, success, error) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                if (success !== undefined) {
+                    success(JSON.parse(xhr.responseText));
                 }
             } else {
                 if (error)
@@ -301,4 +318,63 @@ function convertData(data, callback) {
         result.set(data.name, data);
     }
     callback();
+}
+
+
+
+function parseWeather(data){
+    var slika1 = document.getElementById("prvi");
+    var slika2 = document.getElementById("drugi");
+    var slika3 = document.getElementById("tretji");
+    var text1 = document.getElementById("prvi_text");
+    var text2 = document.getElementById("drugi_text");
+    var text3 = document.getElementById("tretji_text");
+    var day; 
+    var src;
+    
+    var prvi = data.forecast.data[0];
+    var time = prvi.forecast_time;
+    var d = new Date(prvi.forecast_time.split(" ")[0]);
+    day =  d.toString().split(' ')[0];
+    text1.innerText= day; 
+    src = makeWeatherElement(prvi);
+    slika1.src= "./img/" + src;
+
+    data.forecast.data.forEach(element => {
+        if(parseInt(element.forecast_time.split(" ")[0].split("-")[2]) == (parseInt(time.split(" ")[0].split("-")[2]) + 1) && element.forecast_time.split(" ")[1] == "13:00"){
+            src = makeWeatherElement(element);
+            var d = new Date(element.forecast_time.split(" ")[0]);
+            day = d.toString().split(' ')[0];
+            text2.innerText=day
+            slika2.src= "./img/" + src;
+        }
+
+        if(parseInt(element.forecast_time.split(" ")[0].split("-")[2]) == (parseInt(time.split(" ")[0].split("-")[2]) + 2) && element.forecast_time.split(" ")[1] == "13:00"){
+            src = makeWeatherElement(element);
+            var d = new Date(element.forecast_time.split(" ")[0]);
+            day = d.toString().split(' ')[0];
+            text3.innerText=day
+            slika3.src= "./img/" + src;
+        }
+    })
+}
+
+function makeWeatherElement(el){
+    var d = new Date(el.forecast_time.split(" ")[0]);
+    var day =  d.toString().split(' ')[0];
+    var clouds = el.clouds;
+    var rain = el.rain;
+    var src = "";
+    if(clouds > 50){
+        if(rain > 50){
+            src = "1 1.png";
+        }else{
+            src = "1 0.png"
+        }
+    }else{
+        src = "0 0.png";
+    }
+
+    return src;
+
 }

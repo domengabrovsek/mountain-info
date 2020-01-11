@@ -668,3 +668,26 @@ margin: 0;
     display: inline-block;
     margin-left: 6px;
 }
+
+
+.weather-table{
+    width: 300px;
+}
+.weather-header{
+    margin-bottom: 10px;
+}
+
+.weather-icon{
+    width: 60%;
+}
+
+.table-col{
+    width:30%;
+    text-align: center;
+}
+
+@media screen and (max-width: 400px) {
+    .weather-table{
+        width:100%;
+    }
+}
