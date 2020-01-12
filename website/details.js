@@ -278,7 +278,7 @@ function createCarouselItems() {
 
         /*  difficult */
         let divDifficult = document.createElement("div");
-        divDifficult.innerHTML = "<i class='material-icons result-item-icon'>linear_scale</i><p class='path-item-text'>Difficult: " + path.difficultLevel + "</p>";
+        divDifficult.innerHTML = "<i class='material-icons result-item-icon'>linear_scale</i><p class='path-item-text'>Difficulty: " + path.difficultLevel + "</p>";
 
 
         let dataWrapper = document.createElement("div");
