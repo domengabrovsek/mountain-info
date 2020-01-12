@@ -1,5 +1,7 @@
 package com.example.mountaininfo.API;
 
+import androidx.annotation.NonNull;
+
 public class APIResults {
 
 
@@ -55,11 +57,27 @@ public class APIResults {
         public int getAltitude(){
             return altitude;
         }
+
+        public Coordinates getCoordinates() { return coordinates; }
     }
 
     public class Coordinates{
         String N;
         String E;
+
+        public String getN() { return N; }
+        public String getE() { return E; }
     }
 
+    public class Weather {
+        int clouds;
+        int rain;
+        int offset;
+
+        public int getClouds() {return clouds;}
+
+        public int getRain() { return rain; }
+
+        public int getOffset() { return offset; }
+    }
 }

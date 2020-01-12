@@ -22,6 +22,8 @@ public class MountainDetails extends AppCompatActivity {
     private static String MOUNTAINNAME = "MOUNTAINNAME";
     private static String MOUNTAINRANGE = "MOUNTAINRANGE";
     private static String MOUNTAINALT = "MOUNTAINALT";
+    private static String MOUTAINCOORDE = "MOUNTAINCOORDE";
+    private static String MOUTAINCOORDN = "MOUNTAINCOORDN";
 
     private int mountainId;
     private String mountainName, mountainRange, mountainAlt;
@@ -34,12 +36,14 @@ public class MountainDetails extends AppCompatActivity {
     TextView name, start, finish, time, altitudeDif, difficulty;
     TextView mountainNameTv, mountainRangeTv, mountainAltitudeTv;
 
-    static Intent returnMountainDetails(Context ctx, int id, String name, String range, String alt){
+    static Intent returnMountainDetails(Context ctx, int id, String name, String range, String alt, APIResults.Coordinates coordinates){
         Intent intent = new Intent(ctx, MountainDetails.class);
         intent.putExtra(ID, id);
         intent.putExtra(MOUNTAINNAME, name);
         intent.putExtra(MOUNTAINRANGE, range);
         intent.putExtra(MOUNTAINALT, alt);
+        intent.putExtra(MOUTAINCOORDE, coordinates.getE());
+        intent.putExtra(MOUTAINCOORDN, coordinates.getN());
         return intent;
     }
 

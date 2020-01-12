@@ -14,6 +14,7 @@ public class DataViewModel extends ViewModel {
     MutableLiveData<List<APIResults.Route>> routes = new MutableLiveData<>();
 
     MutableLiveData<APIResults.Mountain> mountain = new MutableLiveData<>();
+    MutableLiveData<APIResults.Weather> weather = new MutableLiveData<>();
 
     public MutableLiveData<List<APIResults.Mountain>> getMountains(){
         return mountains;
@@ -21,6 +22,8 @@ public class DataViewModel extends ViewModel {
     public MutableLiveData<List<APIResults.Route>> getRoutes(){
         return routes;
     }
+    public MutableLiveData<APIResults.Mountain> getMountain() {return mountain; }
+    public MutableLiveData<APIResults.Weather> getWeather() { return weather; }
 
     public void loadRoutes() {
 
@@ -152,6 +155,25 @@ public class DataViewModel extends ViewModel {
 
             @Override
             public void onFailure(Call<APIResults.Mountain> call, Throwable t) {
+                Log.d("Fail","failllll");
+            }
+        });
+    }
+
+    public void getWeather(String lat, String lon) {
+        Singleton.getService().getWeatherByLocation(lat,lon).enqueue(new Callback<APIResults.Weather>() {
+            @Override
+            public void onResponse(Call<APIResults.Weather> call, Response<APIResults.Weather> response) {
+                if(response.isSuccessful()){
+                    APIResults.Weather body = response.body();
+                    if(body != null){
+                        weather.postValue(body);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<APIResults.Weather> call, Throwable t) {
                 Log.d("Fail","failllll");
             }
         });
