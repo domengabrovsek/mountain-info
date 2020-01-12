@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,14 +28,20 @@ public class MountainDetails extends AppCompatActivity {
 
     private int mountainId;
     private String mountainName, mountainRange, mountainAlt;
+    private String coordinateE, coordinateN;
     DataViewModel viewModel = null;
 
     List<APIResults.Route> routes;
     int routePosition;
 
+    Button showMap;
     ImageView arrowRight, arrowLeft;
     TextView name, start, finish, time, altitudeDif, difficulty;
     TextView mountainNameTv, mountainRangeTv, mountainAltitudeTv;
+
+    //weather
+    TextView firstDay, secondDay, thirdDay;
+    ImageView firstWeatherDay, secondWeatherDay, thirdWeatherDay;
 
     static Intent returnMountainDetails(Context ctx, int id, String name, String range, String alt, APIResults.Coordinates coordinates){
         Intent intent = new Intent(ctx, MountainDetails.class);
@@ -60,6 +67,8 @@ public class MountainDetails extends AppCompatActivity {
 
         getDataFromIntent();
         viewModel.getRoutesForMountainId(mountainId); //api call
+        viewModel.getWeather(coordinateN.replaceAll(",", "."),
+                coordinateE.replaceAll(",", "."));
     }
 
     void initObserver(){
@@ -70,15 +79,29 @@ public class MountainDetails extends AppCompatActivity {
                 showRoute(routePosition);
             }
         });
+        viewModel.getWeather().observe(this, new Observer<List<APIResults.Weather>>() {
+            @Override
+            public void onChanged(List<APIResults.Weather> weathers) {
+                updateWeatherUI(weathers);
+            }
+        });
     }
 
     void initViews(){
         arrowRight = findViewById(R.id.arrowRight);
         arrowLeft = findViewById(R.id.arrowLeft);
+        //showMap = findViewById(R.id.showMap);
 
         mountainNameTv = findViewById(R.id.mountainName);
         mountainRangeTv = findViewById(R.id.mountainRange);
         mountainAltitudeTv = findViewById(R.id.mountainAltitude);
+
+        firstDay = findViewById(R.id.firstDay);
+        secondDay = findViewById(R.id.secondDay);
+        thirdDay = findViewById(R.id.thirdDay);
+        firstWeatherDay = findViewById(R.id.firstWeatherDay);
+        secondWeatherDay= findViewById(R.id.secondWeatherDay);
+        thirdWeatherDay = findViewById(R.id.thirdWeatherDay);
 
         name = findViewById(R.id.routeName);
         start = findViewById(R.id.routeStart);
@@ -111,6 +134,12 @@ public class MountainDetails extends AppCompatActivity {
                 showRoute(routePosition);
             }
         });
+        /*showMap.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                startActivity(MapsActivity.returnMapsActivity(MountainDetails.this));
+            }
+        });*/
     }
 
     void showRoute(int position){
@@ -123,12 +152,38 @@ public class MountainDetails extends AppCompatActivity {
         difficulty.setText(route.getDifficultLevel());
     }
 
+    void updateWeatherUI(List<APIResults.Weather> weathers){
+        firstDay.setText(weathers.get(0).getForecast_time().split(" ")[0]);
+        firstWeatherDay.setImageResource(getWeatherIcon(weathers.get(0).getClouds(), weathers.get(0).getRain()));
+
+        secondDay.setText(weathers.get(8).getForecast_time().split(" ")[0]);
+        secondWeatherDay.setImageResource(getWeatherIcon(weathers.get(8).getClouds(), weathers.get(8).getRain()));
+
+        thirdDay.setText(weathers.get(16).getForecast_time().split(" ")[0]);
+        thirdWeatherDay.setImageResource(getWeatherIcon(weathers.get(16).getClouds(), weathers.get(16).getRain()));
+    }
+
+    int getWeatherIcon(int clouds, int rain){
+        if(clouds > 50){
+            if(rain > 50){
+                return R.drawable.rain;
+            }else{
+                return R.drawable.cloud;
+            }
+        }else{
+            return R.drawable.sunny;
+        }
+    }
+
     void getDataFromIntent(){
         Intent intent = getIntent();
         mountainId = intent.getIntExtra(ID, -1);
         mountainName = intent.getStringExtra(MOUNTAINNAME);
         mountainRange = intent.getStringExtra(MOUNTAINRANGE);
         mountainAlt = intent.getStringExtra(MOUNTAINALT);
+
+        coordinateE = intent.getStringExtra(MOUTAINCOORDE);
+        coordinateN = intent.getStringExtra(MOUTAINCOORDN);
 
         mountainNameTv.setText(mountainName);
         mountainRangeTv.setText(mountainRange);

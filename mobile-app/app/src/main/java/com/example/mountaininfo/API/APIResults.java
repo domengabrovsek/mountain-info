@@ -2,6 +2,8 @@ package com.example.mountaininfo.API;
 
 import androidx.annotation.NonNull;
 
+import java.util.List;
+
 public class APIResults {
 
 
@@ -69,10 +71,21 @@ public class APIResults {
         public String getE() { return E; }
     }
 
+    public class WeatherResult{
+        Forecast forecast;
+    }
+
+    public class Forecast{
+        List<Weather> data;
+    }
+
     public class Weather {
+        String forecast_time;
         int clouds;
         int rain;
         int offset;
+
+        public String getForecast_time(){return forecast_time;}
 
         public int getClouds() {return clouds;}
 
