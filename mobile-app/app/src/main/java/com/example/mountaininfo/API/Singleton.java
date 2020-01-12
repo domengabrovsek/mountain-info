@@ -36,8 +36,8 @@ public class Singleton {
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()
-                //.baseUrl("https://10.0.2.2:3000/")
-                .baseUrl("http://192.168.1.112:3000/") // for real device only
+                .baseUrl("http://10.0.2.2:3000/")
+                //.baseUrl("http://192.168.1.112:3000/") // for real device only
                 .client(okhttp)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

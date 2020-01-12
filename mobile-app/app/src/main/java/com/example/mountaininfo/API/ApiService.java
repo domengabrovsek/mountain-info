@@ -32,7 +32,7 @@ interface ApiService {
     Call<List<APIResults.Mountain>> getMountainsByName(@Path("name") String name);
 
     @GET("/weather/lat={lat}&lon={lon}")
-    Call<APIResults.Weather> getWeatherByLocation(@Path("lat") String lat, @Path("lon") String lon);
+    Call<APIResults.WeatherResult> getWeatherByLocation(@Path("lat") String lat, @Path("lon") String lon);
 
     /*@GET("/weather/name/{name}")
     Call<> getWeatherByCity(@Path("name") String name);*/
