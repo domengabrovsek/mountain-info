@@ -12,6 +12,7 @@ import com.example.mountaininfo.API.APIResults;
 import com.example.mountaininfo.API.DataViewModel;
 import com.example.mountaininfo.Adapters.MountainAdapter;
 import java.util.List;
+import java.util.Random;
 
 public class SearchResultActivity extends AppCompatActivity {
 
@@ -64,11 +65,17 @@ public class SearchResultActivity extends AppCompatActivity {
         maxAltitude = intent.getStringExtra(MAXALTITUDE);
     }
 
+    int getRandomID() {
+        Random rnd = new Random();
+        return rnd.nextInt(21); // between 0-20
+    }
+
     void executeApiCall(){
         switch (apiCall){
             case 0: viewModel.getMountainsByName(mountainName); break; //get mountains by name
             case 1: viewModel.getMountainsByAltitude(altitude); break; //get mountains by altitude
             case 2: viewModel.getMountainsByAltitudeRange(minAltitude, maxAltitude); break; //get mountains by altitude range
+            case 3: viewModel.getRandomMountain(String.valueOf(getRandomID()));
         }
     }
 

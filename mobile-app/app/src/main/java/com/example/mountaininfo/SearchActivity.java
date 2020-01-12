@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.mountaininfo.API.DataViewModel;
 import com.example.mountaininfo.DataClasses.ApiCallParameters;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Arrays;
 
@@ -26,6 +27,7 @@ public class SearchActivity extends AppCompatActivity {
     TextView nameTv, altitudeTv, minAltitudeTv, maxAltitudeTv;
     TextView go;
     DataViewModel viewModel;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,7 @@ public class SearchActivity extends AppCompatActivity {
         minAltitudeTv = findViewById(R.id.minHeight);
         maxAltitudeTv = findViewById(R.id.maxHeight);
         go = findViewById(R.id.go);
+        fab = findViewById(R.id.floatingButton);
     }
 
     void initOnClickListeners(){
@@ -79,7 +82,7 @@ public class SearchActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                ApiCallParameters params = getApiCallParameters();
+                ApiCallParameters params = getApiCallParameters(false);
                 if(searchBar.getText().toString().equals("") || params.getCall() == -1){
                     Toast.makeText(SearchActivity.this, "Invalid search!", Toast.LENGTH_LONG).show();
                 } else{
@@ -90,10 +93,33 @@ public class SearchActivity extends AppCompatActivity {
                 }
             }
         });
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ApiCallParameters params = getApiCallParameters(true);
+                startActivity(SearchResultActivity.returnSearchResultActivityIntent(
+                        SearchActivity.this, params.getCall(), params.getName(), params.getAltitude(),
+                        params.getMinAltitude(), params.getMaxAltitude()));
+                finish();
+                /*if(searchBar.getText().toString().equals("") || params.getCall() == -1){
+                    Toast.makeText(SearchActivity.this, "Invalid search!", Toast.LENGTH_LONG).show();
+                } else{
+                    startActivity(SearchResultActivity.returnSearchResultActivityIntent(
+                            SearchActivity.this, params.getCall(), params.getName(), params.getAltitude(),
+                            params.getMinAltitude(), params.getMaxAltitude()));
+                    finish();
+                }*/
+            }
+        });
     }
 
-    ApiCallParameters getApiCallParameters(){
+    ApiCallParameters getApiCallParameters(boolean isRandomMountain){
         //ApiCallParameters will determine which api call to execute in SearchResult activity
+
+        if(isRandomMountain) {
+            return new ApiCallParameters(3, "", "", "", "");
+        }
+
         int apiCall = -1;
         String name = "";
         String altitude = "";

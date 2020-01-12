@@ -13,6 +13,8 @@ public class DataViewModel extends ViewModel {
     MutableLiveData<List<APIResults.Mountain>> mountains = new MutableLiveData<>();
     MutableLiveData<List<APIResults.Route>> routes = new MutableLiveData<>();
 
+    MutableLiveData<APIResults.Mountain> mountain = new MutableLiveData<>();
+
     public MutableLiveData<List<APIResults.Mountain>> getMountains(){
         return mountains;
     }
@@ -131,6 +133,25 @@ public class DataViewModel extends ViewModel {
             }
             @Override
             public void onFailure(Call<List<APIResults.Route>> call, Throwable t) {
+                Log.d("Fail","failllll");
+            }
+        });
+    }
+
+    public void getRandomMountain(String id){
+        Singleton.getService().getMountainById(id).enqueue(new Callback<APIResults.Mountain>() {
+            @Override
+            public void onResponse(Call<APIResults.Mountain> call, Response<APIResults.Mountain> response) {
+                if(response.isSuccessful()){
+                    APIResults.Mountain body = response.body();
+                    if(body != null){
+                        mountain.postValue(body);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<APIResults.Mountain> call, Throwable t) {
                 Log.d("Fail","failllll");
             }
         });
