@@ -11,6 +11,8 @@ import android.os.Bundle;
 import com.example.mountaininfo.API.APIResults;
 import com.example.mountaininfo.API.DataViewModel;
 import com.example.mountaininfo.Adapters.MountainAdapter;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -30,6 +32,8 @@ public class SearchResultActivity extends AppCompatActivity {
     private int apiCall;
     private String mountainName;
     private String altitude, minAltitude, maxAltitude;
+    private int randomMountainID;
+    private APIResults.Coordinates mountainCoordinates;
 
     static Intent returnSearchResultActivityIntent(Context ctx, int apiCall, String mountainName,
                                                    String altitude, String minAltitude, String maxAltitude) {
@@ -53,6 +57,8 @@ public class SearchResultActivity extends AppCompatActivity {
 
         initObserver();
 
+        randomMountainID = getRandomID();
+
         executeApiCall();
     }
 
@@ -75,8 +81,10 @@ public class SearchResultActivity extends AppCompatActivity {
             case 0: viewModel.getMountainsByName(mountainName); break; //get mountains by name
             case 1: viewModel.getMountainsByAltitude(altitude); break; //get mountains by altitude
             case 2: viewModel.getMountainsByAltitudeRange(minAltitude, maxAltitude); break; //get mountains by altitude range
-            case 3: viewModel.getRandomMountain(String.valueOf(getRandomID()));
+            case 3: viewModel.getRandomMountain(String.valueOf(randomMountainID));
         }
+
+        viewModel.getWeather();
     }
 
     void initObserver(){
@@ -84,6 +92,13 @@ public class SearchResultActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<APIResults.Mountain> mountains) {
                 updateUi(mountains);
+            }
+        });
+
+        viewModel.getMountain().observe(this, new Observer<APIResults.Mountain>() {
+            @Override
+            public void onChanged(APIResults.Mountain mountain) {
+                updateUiMountain(mountain);
             }
         });
     }
@@ -102,8 +117,32 @@ public class SearchResultActivity extends AppCompatActivity {
                 String name = mountains.get(position).getName();
                 String range = mountains.get(position).getRange();
                 String alt = Integer.toString(mountains.get(position).getAltitude());
+                APIResults.Coordinates coordinates = mountains.get(position).getCoordinates();
                 startActivity(MountainDetails.returnMountainDetails(SearchResultActivity.this,
-                        id, name, range, alt));
+                        id, name, range, alt, coordinates));
+            }
+        });
+    }
+
+    void updateUiMountain(final APIResults.Mountain mountain){
+        recyclerView = findViewById(R.id.recyclerView);
+        List<APIResults.Mountain> mountainList = new ArrayList<APIResults.Mountain>();
+        mountainList.add(mountain);
+        adapter = new MountainAdapter(mountainList);
+        manager = new LinearLayoutManager(this);
+
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(adapter);
+        adapter.setOnItemClickListener(new MountainAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                int id = mountain.getId();
+                String name = mountain.getName();
+                String range = mountain.getRange();
+                String alt = Integer.toString(mountain.getAltitude());
+                APIResults.Coordinates coordinates = mountain.getCoordinates();
+                startActivity(MountainDetails.returnMountainDetails(SearchResultActivity.this,
+                        id, name, range, alt, coordinates));
             }
         });
     }
