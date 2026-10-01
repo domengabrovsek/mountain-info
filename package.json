@@ -19,14 +19,14 @@
   },
   "homepage": "https://github.com/domengabrovsek/mountain-info#readme",
   "dependencies": {
-    "cheerio": "^1.0.0-rc.3",
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "express-validator": "^6.2.0",
-    "mongodb": "^3.3.4",
-    "mongoose": "^5.7.11",
-    "node-fetch": "^2.6.0",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.5"
+    "cheerio": "^1.2.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.2",
+    "mongodb": "^7.6.0",
+    "mongoose": "^9.10.2",
+    "node-fetch": "^3.3.2",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6"
   }
 }
